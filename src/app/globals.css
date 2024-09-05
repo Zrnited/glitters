@@ -8,15 +8,36 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255; */
   font-family: "Mada", sans-serif;
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: #F7EBEE;
-  ;
 }
 
 input {
   background-color: #F7EBEE;
+}
+
+.activity::-webkit-scrollbar {
+  width: 5px;
+  height: 3px;
+}
+
+/* Track */
+.activity::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+.activity::-webkit-scrollbar-thumb {
+  background: #bdbbbb; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.activity::-webkit-scrollbar-thumb:hover {
+  background: #adacac; 
 }
 
 /* @media (prefers-color-scheme: dark) {

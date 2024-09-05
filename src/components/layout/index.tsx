@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+// import { useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
 import { usePathname } from "next/navigation";
@@ -17,8 +17,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     } else if (path === "/resetpassword") {
       // setPaths(false);
       return false;
-    } else {
+    } else if (path === "/createnewpassword") {
       // setPaths(true);
+      return false;
+    } else {
       return true;
     }
   }
