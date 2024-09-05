@@ -1,11 +1,53 @@
+"use client";
+import { MouseEventHandler, useState } from "react";
 import Image from "next/image";
 import Layout from "@/components/layout";
 import NextVideo from "next-video";
 import productVideo from "../../videos/product.mp4";
 import heroimage2 from "@/assets/images/heroImg-2.png";
 import heroimage3 from "@/assets/images/heroImg-3.png";
+import fastDelivery from "@/assets/icons/fastdelivery.png";
+import customerCare from "@/assets/icons/customercare.png";
+import professionalism from "@/assets/icons/professional.png";
+import topLadies from "@/assets/icons/people.png";
 
 export default function Home() {
+  
+  const experience = [
+    {
+      img: fastDelivery,
+      heading: "Fast Delivery",
+      text: "Get your orders delivered swiftly, right when you need them.",
+    },
+    {
+      img: customerCare,
+      heading: "Excellent Customer Care",
+      text: "Our dedicated team ensures your satisfaction with every interaction.",
+    },
+    {
+      img: professionalism,
+      heading: "Professionalism & Craft",
+      text: "Expertly crafted services with a commitment to excellence.",
+    },
+    {
+      img: topLadies,
+      heading: "Access to a Top Ladies Community",
+      text: "Join a vibrant network if empowered women, exclusive to our members.",
+    },
+  ];
+
+  const [productVisibility, setProductVisibility] = useState({
+    bags: true,
+    beadwares: false,
+    partnerProdts: false
+  })
+
+  // function getCurrentProduct ({e}: object){
+  //   console.log(e)
+  // }
+
+  // console.log(productVisibility);
+
   return (
     <Layout>
       <section className="p-5 lg:flex lg:flex-col lg:justify-center">
@@ -17,7 +59,6 @@ export default function Home() {
           </p>
         </div>
         <article className="py-10 flex flex-col gap-y-10 sm:justify-center sm:items-center lg:flex-row-reverse gap-x-6 xl:items-start">
-
           {/* carousel div */}
           <div className="flex flex-row gap-x-3 overflow-scroll activity sm:overflow-hidden md:justify-center md:w-full md:gap-x-6 lg:w-3/4">
             {/* video div */}
@@ -57,6 +98,53 @@ export default function Home() {
             </button>
           </div>
         </article>
+      </section>
+      <section className="py-5 px-5">
+        <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
+          What you experience shopping with us
+        </h1>
+        <div className="py-10 grid grid-cols-2 gap-y-10 place-items-start sm:place-items-center md:grid-cols-4 md:place-items-start lg:gap-y-0 lg:gap-x-8 lg:py-20">
+          {experience?.map((exp, index) => {
+            return (
+              <div
+                key={index}
+                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer lg:max-w-[280px] lg:gap-y-4 lg:p-3 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
+              >
+                <div className="h-[100px] w-[100px] bg-[#F1DADF] rounded-md flex items-center justify-center">
+                  <Image
+                    src={exp.img}
+                    alt="icon"
+                    priority
+                    className="w-1/2 h-1/2"
+                  />
+                </div>
+                <h3 className="font-medium text-xl mt-2 lg:text-2xl">
+                  {exp.heading}
+                </h3>
+                <p className="text-[#746266] lg:text-lg">{exp.text}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+      <section className="py-10 px-5">
+        <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
+          Explore our cutesy products
+        </h1>
+        <div className="flex flex-row justify-center gap-5 font-semibold text-lg my-7 border-b border-black">
+          <div className="flex flex-col gap-y-1">
+            <p className="cursor-pointer">Bags</p>
+            {productVisibility.bags && (<span className="bg-black h-[5px] rounded-sm"></span>)}
+          </div>
+          <div className="flex flex-col gap-y-1">
+            <p className="cursor-pointer">Beadwares</p>
+            {productVisibility.beadwares && (<span className="bg-black h-[5px] rounded-sm"></span>)}
+          </div>
+          <div className="flex flex-col gap-y-1">
+            <p className="cursor-pointer">Partners Products</p>
+            {productVisibility.partnerProdts && (<span className="bg-black h-[5px] rounded-sm"></span>)}
+          </div>
+        </div>
       </section>
     </Layout>
   );

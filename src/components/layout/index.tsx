@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="container">
         <Navbar />
         {/* <Sidebar /> */}
-        <div className="flex justify-center items-center flex-grow">
+        <div>
           {children}
         </div>
         {checkPath() && <Footer />}
