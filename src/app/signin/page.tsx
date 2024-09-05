@@ -1,0 +1,57 @@
+// 'use client';
+import Layout from "@/components/layout";
+import { BsEye } from "react-icons/bs";
+import Link from "next/link";
+
+export default function Page() {
+  return (
+    <Layout>
+      <section className="w-full mt-10 sm:flex sm:justify-center">
+        <div className="flex flex-col gap-y-3 px-5 sm:w-[400px]">
+          <h1 className="text-4xl text-center font-medium">Sign In</h1>
+          <form className="flex flex-col gap-y-5">
+            <div className="flex flex-col gap-y-2">
+              <label>Email address</label>
+              <input
+                placeholder="Enter your email address"
+                type="email"
+                className="focus:outline-none px-4 h-[55px] border border-[#2E2729]"
+              />
+            </div>
+            <div className="relative flex flex-col gap-y-2">
+              <label>Password</label>
+              <input
+                placeholder="Enter your password"
+                type="text"
+                className="focus:outline-none px-4 h-[55px] border border-[#2E2729]"
+              />
+              <i className="absolute right-5 top-12 cursor-pointer">
+                <BsEye size={20} color="gray" />
+              </i>
+            </div>
+            <button className="h-[55px] bg-[#2E2729] text-white hover:bg-[#2b2426] transition delay-100">
+              Sign in to account
+            </button>
+          </form>
+          <div className="flex flex-row justify-between items-start w-full">
+            <div className="flex flex-col">
+              <p>New user?</p>
+              <Link
+                href={"/signup"}
+                className="text-[#CF8292] font-medium hover:underline"
+              >
+                Create an account
+              </Link>
+            </div>
+            <Link
+              href={"/resetpassword"}
+              className="text-[#CF8292] font-medium hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
+}
