@@ -38,7 +38,7 @@ export default function Home() {
     },
   ];
 
-  const [currentGroup, setCurrentGroup] = useState<string>("");
+  // const [currentGroup, setCurrentGroup] = useState<string>("");
   const [getProductId, setGetProductId] = useState<number>();
   const router = useRouter();
 
@@ -136,63 +136,7 @@ export default function Home() {
           })}
         </div>
       </section>
-      <section className="pt-10 pb-10 px-5 lg:pt-0 lg:pb-10 xl:px-2">
-        <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
-          Explore our cutesy products
-        </h1>
-        <div className="flex flex-col justify-center w-full">
-          <div className="flex flex-row justify-center gap-5 font-semibold text-lg my-7 border-b border-black lg:max-w-[400px] lg:place-self-center">
-            <div className="flex flex-col gap-y-1">
-              <p
-                onClick={(e: any) => {
-                  // console.log(e.target.innerHTML);
-                  const group = e.target.innerHTML;
-                  setCurrentGroup(group);
-                }}
-                className="cursor-pointer"
-              >
-                Bags
-              </p>
-              {(currentGroup === "Bags" || currentGroup === "") && (
-                <span className="bg-black h-[5px] rounded-sm"></span>
-              )}
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p
-                onClick={(e: any) => {
-                  // console.log(e.target.innerHTML);
-                  const group = e.target.innerHTML;
-                  setCurrentGroup(group);
-                }}
-                className="cursor-pointer"
-              >
-                Beadwares
-              </p>
-              {currentGroup === "Beadwares" && (
-                <span className="bg-black h-[5px] rounded-sm"></span>
-              )}
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p
-                onClick={(e: any) => {
-                  // console.log(e.target.innerHTML);
-                  const group = e.target.innerHTML;
-                  setCurrentGroup(group);
-                }}
-                className="cursor-pointer"
-              >
-                Partners Products
-              </p>
-              {currentGroup === "Partners Products" && (
-                <span className="bg-black h-[5px] rounded-sm"></span>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        {/* Products display section */}
-        <Products productsData={products} setProductId={setProductId}/>
-      </section>
+      <Products productsData={products} setProductId={setProductId}/>
     </Layout>
   );
 }

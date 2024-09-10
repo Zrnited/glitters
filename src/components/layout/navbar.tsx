@@ -39,11 +39,13 @@ export default function Navbar() {
             alt="search-icon"
             className="w-[25px] h-auto cursor-pointer md:w-[30px]"
           />
-          <Image
-            src={cart}
-            alt="cart-icon"
-            className="w-[25px] h-auto cursor-pointer md:w-[30px]"
-          />
+          <Link href={'/cart'}>
+            <Image
+              src={cart}
+              alt="cart-icon"
+              className="w-[25px] h-auto cursor-pointer md:w-[30px]"
+            />
+          </Link>
           <Image
             src={account}
             alt="account-icon"

@@ -1,91 +1,221 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Layout from "@/components/layout";
+import Loading from "@/components/loading/loading";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import fullProdImg from "@/assets/images/product3-2.png";
 import vector1 from "@/assets/icons/vector-1.png";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
+export interface Products {
+  id: number;
+  coverImg: StaticImageData;
+  fullImg: StaticImageData;
+  name: string;
+  desc: string;
+  about: string;
+  price: number;
+  status: string;
+  Category: string;
+  quantity?: number 
+}
+
 export default function Page() {
+  // const [currentGroup, setCurrentGroup] = useState<string>("");
+
+  const [getProductId, setGetProductId] = useState<number>();
+  const [prod, setProd] = useState<Products>();
+  const [count, setCount] = useState<number>(0);
+  const [cartArr, setCartArr] = useState<Array<object>>();
+  console.log(cartArr);
+  const [newObj, setNewObj] = useState<object>();
+  // console.log(newObj);
+  const router = useRouter();
+
+  function getProduct() {
+    //first we get the session data
+    //we check for data to not be null, undefined etc
+    //If we have data, we parse it and put it into the array
+    //we then push onto the array, which is either empty (no session data) or filled (Session data)
+    //we finally set the session data back
+    const selectedProduct = sessionStorage.getItem("currProduct");
+    if (!selectedProduct) {
+      // sessionStorage.setItem("currProduct", JSON.stringify([path]));
+      console.log("empty storage");
+      return;
+    } else {
+      console.log("Found one!");
+      const product = JSON.parse(selectedProduct);
+      setProd(product);
+    }
+
+    //come back when dealing with cart page
+    //  const historyArr: Array<string> = JSON.parse(selectedProduct);
+    //  historyArr.push(path);
+    //  sessionStorage.setItem('currProduct', JSON.stringify(historyArr));
+  }
+
+  function setProductId(e: number) {
+    // console.log(e);
+    setGetProductId(e);
+  }
+
+  function setCart (){
+    if (prod){
+      const currentProduct = prod;
+      // console.log(prod);
+      setNewObj({
+        id: currentProduct.id,
+        coverImg: currentProduct.coverImg,
+        fullImg: currentProduct.fullImg,
+        name: currentProduct.name,
+        desc: currentProduct.desc,
+        about: currentProduct.about,
+        price: currentProduct.price,
+        status: currentProduct.status,
+        Category: currentProduct.Category,
+        quantity: count + 1
+      })
+    } else {
+      return;
+    }
+  }
+
+  //YOU'RE HERE
+
+  // useEffect(()=>{
+  //   setCartArr((prev)=>{
+  //     if(prev){
+  //       return [
+  //         ...prev,
+  //         newObj
+  //       ]
+  //     } else {
+  //       return;
+  //     }
+  //   })
+  // }, [newObj])
+
+  useEffect(() => {
+    getProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getProductId]);
+
+  useEffect(() => {
+    if (getProductId === undefined) {
+      return;
+    } else {
+      router.push(`/product/${getProductId.toString()}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getProductId]);
+
   return (
     <Layout>
-      <section className="px-5 py-5">
-        <div className="bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center sm:hidden">
-          <p className="text-sm">
-            We&apos;re giving 20% discount for our first 1,000 orders. Use Code{" "}
-            <span className="font-bold">FIRST1K </span>to get the discount in
-            your order.
-          </p>
-        </div>
-        <div className="mt-5 mb-2">
-          <h1 className="font-medium text-lg text-[#CF8292]"> <Link className="hover:underline" href={'/'}>Home </Link>
-            <span className="text-black">/</span>{" "}
-            <span className="text-gray-400">Product</span>
-          </h1>
-        </div>
-        <div className="flex flex-col gap-y-5">
-          <div className="w-full sm:w-[400px]">
-            <Image
-              className="w-full h-auto"
-              alt="product-img"
-              priority
-              src={fullProdImg}
-            />
+      {/* Where the session storage object comes in */}
+      {prod && (
+        <section className="px-5 py-5 lg:mb-5">
+          <div className="bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center sm:hidden">
+            <p className="text-sm">
+              We&apos;re giving 20% discount for our first 1,000 orders. Use
+              Code <span className="font-bold">FIRST1K </span>to get the
+              discount in your order.
+            </p>
           </div>
-          <div className="flex flex-col gap-y-4">
-            <div className="hidden bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center sm:flex">
-              <p className="text-sm">
-                We&apos;re giving 20% discount for our first 1,000 orders. Use
-                Code <span className="font-bold">FIRST1K </span>to get the
-                discount in your order.
-              </p>
+          <div className="mt-5 mb-2">
+            <h1 className="font-medium text-lg text-[#CF8292]">
+              {" "}
+              <Link className="hover:underline" href={"/"}>
+                Home{" "}
+              </Link>
+              <span className="text-black">/</span>{" "}
+              <span className="text-gray-400">Product</span>
+            </h1>
+          </div>
+          <div className="flex flex-col gap-y-5 lg:flex-row lg:gap-x-8 xl:gap-x-12">
+            <div className="w-full sm:flex sm:justify-center lg:min-w-[400px] lg:h-[588px] xl:min-w-[565px] xl:h-auto">
+              <Image
+                className="w-full h-auto rounded-lg sm:w-[400px] lg:w-full"
+                alt="product-img"
+                priority
+                src={fullProdImg}
+              />
             </div>
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-col">
-                <h1 className="text-3xl font-medium">Purple fur bag</h1>
-                <p className="text-lg">Our bestselling fur bag so far</p>
-              </div>
-              <div className="flex flex-col items-end">
-                <h1 className="text-3xl font-medium">N39,000</h1>
-                <p className="text-sm bg-[#00A460] px-2 text-white">
-                  Available
+            <div className="flex flex-col gap-y-4 lg:gap-y-5 lg:min-w-[500px] xl:min-w-[630px] xl:gap-y-12">
+              <div className="hidden bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center sm:flex">
+                <p className="text-sm">
+                  We&apos;re giving 20% discount for our first 1,000 orders. Use
+                  Code <span className="font-bold">FIRST1K </span>to get the
+                  discount in your order.
                 </p>
               </div>
-            </div>
-            <p className="text-xl">
-              Step into luxury with our bestselling Purple Fur Bag. Crafted from
-              the softest faux fur, this chic accessory is a perfect blend of
-              style and comfort. Its rich purple hue adds a pop of color to any
-              outfit, making it a versatile statement piece for day or night.
-              Spacious enough to carry your essentials, yet compact enough to
-              stay effortlessly elegant, this bag is designed for those who love
-              to stand out. Whether you’re heading to a casual brunch or a
-              glamorous evening out, the Purple Fur Bag is your go-to for adding
-              a touch of opulence to your look.
-            </p>
-            <button className="h-[55px] w-[140px] border border-[#2E2729] font-semibold text-[#2E2729] hover:bg-[#2E2729] hover:text-white transition delay-75 ease-in-out cursor-pointer">
-              Add to Cart +
-            </button>
-            <div className="py-5 flex flex-row items-center gap-x-2">
-              <div className="flex flex-row gap-x-1 items-center">
-                <Image src={vector1} priority alt="vector" className="h-[30px] w-[34px]"/>
-                <p className="underline text-sm font-medium">Pick another color choice</p>
+
+              {/* object parsing begins */}
+              <div className="flex flex-row justify-between">
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-medium lg:text-4xl">
+                    {prod?.name}
+                  </h1>
+                  <p className="text-lg">{prod?.desc}</p>
+                </div>
+                <div className="flex flex-col items-end">
+                  <h1 className="text-3xl font-medium">{`N${(prod.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</h1>
+                  <p className="text-sm bg-[#00A460] px-2 text-white">
+                    {prod?.status}
+                  </p>
+                </div>
               </div>
-              {/* <Image src={vector2} alt="vector" priority className="h-[32px]" /> */}
-              <span className=" border-none w-[1px] h-[32px] bg-black"></span>
-              <div className="flex flex-row gap-x-1 items-center">
-                <p className="text-sm font-medium">New chosen color</p>
-                <i><IoIosArrowRoundForward /></i>
-                <span className="bg-[#FB1CBF] h-[30px] w-[34px]"></span>
+              <p className="text-xl xl:text-2xl">{prod?.about}</p>
+
+              {/* objects parsing ends */}
+              <div className="flex flex-col gap-y-2 lg:flex-row lg:items-center lg:justify-between">
+                <button onClick={(()=>{
+                  setCount(count+1);
+                  setCart();
+                })} className="h-[55px] w-[140px] border border-[rgb(46,39,41)] font-semibold text-[#2E2729] hover:bg-[#41373a] hover:text-white transition delay-75 ease-in-out cursor-pointer lg:text-lg">
+                  Add to Cart {count !== 0 && (<span className="bg-[#41373a] rounded-md p-0.5 text-white">{`+${count}`}</span>)}
+                </button>
+                <Link
+                  className="underline font-medium lg:text-lg"
+                  href={"/cart"}
+                >
+                  Go to cart
+                </Link>
               </div>
+             {count !== 0 && (<div className="py-5 flex flex-row items-center gap-x-2">
+                <div className="flex flex-row gap-x-1 items-center">
+                  <Image
+                    src={vector1}
+                    priority
+                    alt="vector"
+                    className="h-[30px] w-[34px]"
+                  />
+                  <p className="underline cursor-pointer text-sm font-medium lg:text-lg">
+                    Pick another color choice
+                  </p>
+                </div>
+                {/* <Image src={vector2} alt="vector" priority className="h-[32px]" /> */}
+                <span className=" border-none w-[1px] h-[32px] bg-black"></span>
+                <div className="flex flex-row gap-x-1 items-center">
+                  <p className="text-sm font-medium lg:text-lg">
+                    New chosen color
+                  </p>
+                  <i>
+                    <IoIosArrowRoundForward />
+                  </i>
+                  <span className="bg-[#FB1CBF] h-[30px] w-[34px]"></span>
+                </div>
+              </div>)}
             </div>
           </div>
-        </div>
-      </section>
-      <section className="px-5">
-        
-      </section>
+        </section>
+      )}
+      {!prod && <Loading />}
+      <Products productsData={products} setProductId={setProductId} />
     </Layout>
   );
 }
