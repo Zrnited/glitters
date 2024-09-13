@@ -30,9 +30,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="container">
         <Navbar />
         {/* <Sidebar /> */}
-        <div>
+        <main>
           {children}
-        </div>
+        </main>
         {checkPath() && <Footer />}
       </div>
     </div>
