@@ -21,20 +21,75 @@ export interface Products {
   price: number;
   status: string;
   Category: string;
-  quantity?: number 
+  quantity?: number;
+}
+
+export interface newObject {
+  id: number;
+  coverImg: StaticImageData;
+  fullImg: StaticImageData;
+  name: string;
+  desc: string;
+  about: string;
+  price: number;
+  status: string;
+  Category: string;
+  quantity: number;
+}
+
+export interface cartObjects {
+  id?: number;
+  coverImg?: StaticImageData;
+  fullImg?: StaticImageData;
+  name?: string;
+  desc?: string;
+  about?: string;
+  price?: number;
+  status?: string;
+  Category?: string;
+  quantity?: number;
 }
 
 export default function Page() {
-  // const [currentGroup, setCurrentGroup] = useState<string>("");
 
   const [getProductId, setGetProductId] = useState<number>();
   const [prod, setProd] = useState<Products>();
   const [count, setCount] = useState<number>(0);
-  const [cartArr, setCartArr] = useState<Array<object>>();
+  const [cartArr, setCartArr] = useState<Array<cartObjects>>([]);
   console.log(cartArr);
-  const [newObj, setNewObj] = useState<object>();
-  // console.log(newObj);
+
+  const [newObj, setNewObj] = useState<newObject>({
+    id: 0,
+    coverImg: fullProdImg,
+    fullImg: fullProdImg,
+    name: "",
+    desc: "",
+    about: "",
+    price: 0,
+    status: "",
+    Category: "",
+    quantity: count
+  });
   const router = useRouter();
+
+  function getCartArr (){
+    const cartItems = sessionStorage.getItem("cartItems");
+    if(!cartItems){
+      console.log("Cannot find cart in session storage");
+      return;
+    } else {
+      const exisCartArr: object[] = JSON.parse(cartItems);
+      // console.log(exisCartArr);
+      setCartArr(exisCartArr);
+      // console.log("existing cart array gotten and set to cartArr");
+    }
+  }
+
+  function setCartToSessionStorage (cartItems: object[]){
+    // const defaultCartArr: object[] = [];
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    // console.log("Cart Array Set");
+  }
 
   function getProduct() {
     //first we get the session data
@@ -48,15 +103,10 @@ export default function Page() {
       console.log("empty storage");
       return;
     } else {
-      console.log("Found one!");
+      // console.log("Found one!");
       const product = JSON.parse(selectedProduct);
       setProd(product);
     }
-
-    //come back when dealing with cart page
-    //  const historyArr: Array<string> = JSON.parse(selectedProduct);
-    //  historyArr.push(path);
-    //  sessionStorage.setItem('currProduct', JSON.stringify(historyArr));
   }
 
   function setProductId(e: number) {
@@ -64,8 +114,8 @@ export default function Page() {
     setGetProductId(e);
   }
 
-  function setCart (){
-    if (prod){
+  function setNewObject() {
+    if (prod) {
       const currentProduct = prod;
       // console.log(prod);
       setNewObj({
@@ -78,30 +128,56 @@ export default function Page() {
         price: currentProduct.price,
         status: currentProduct.status,
         Category: currentProduct.Category,
-        quantity: count + 1
-      })
+        quantity: count + 1,
+      });
     } else {
       return;
     }
   }
 
   //YOU'RE HERE
+  // To search for an existing object id
+  function findItemById (id:number | undefined): cartObjects | undefined {
+    //find from existing cartArr if a selected product is already there.
+    
+    //find
+    const item = cartArr?.find(item => item?.id === id);
 
-  // useEffect(()=>{
-  //   setCartArr((prev)=>{
-  //     if(prev){
-  //       return [
-  //         ...prev,
-  //         newObj
-  //       ]
-  //     } else {
-  //       return;
-  //     }
-  //   })
-  // }, [newObj])
+    //if found, edit the properties
+    if(item){
+      item.quantity = count
+    } else {
+      return
+    }
+    return item;
+  }
+
+  useEffect(() => {
+    if(count !== 0){
+      //
+      const result = findItemById(newObj?.id);
+      console.log(result);
+      if(result){
+        console.log("Existing object has been updated")
+      } else {
+        setCartArr((prevState)=>{
+          return [
+            ...prevState,
+            newObj
+          ]
+        })
+        console.log("New object added");
+      }
+    } else {
+      console.log('Welcome to products page');
+      return
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
 
   useEffect(() => {
     getProduct();
+    getCartArr();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProductId]);
 
@@ -113,6 +189,15 @@ export default function Page() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProductId]);
+
+  useEffect(()=>{
+    if(cartArr.length !== 0 && count !== 0){
+      // console.log(cartArr);
+      setCartToSessionStorage(cartArr);
+    } else {
+      return;
+    }
+  }, [cartArr, count])
 
   return (
     <Layout>
@@ -163,7 +248,10 @@ export default function Page() {
                   <p className="text-lg">{prod?.desc}</p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <h1 className="text-3xl font-medium">{`N${(prod.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</h1>
+                  <h1 className="text-3xl font-medium">{`N${prod.price.toLocaleString(
+                    undefined,
+                    { maximumFractionDigits: 2 }
+                  )}`}</h1>
                   <p className="text-sm bg-[#00A460] px-2 text-white">
                     {prod?.status}
                   </p>
@@ -173,11 +261,17 @@ export default function Page() {
 
               {/* objects parsing ends */}
               <div className="flex flex-col gap-y-2 lg:flex-row lg:items-center lg:justify-between">
-                <button onClick={(()=>{
-                  setCount(count+1);
-                  setCart();
-                })} className="h-[55px] w-[140px] border border-[rgb(46,39,41)] font-semibold text-[#2E2729] hover:bg-[#41373a] hover:text-white transition delay-75 ease-in-out cursor-pointer lg:text-lg">
-                  Add to Cart {count !== 0 && (<span className="bg-[#41373a] rounded-md p-0.5 text-white">{`+${count}`}</span>)}
+                <button
+                  onClick={() => {
+                    setCount(count + 1);
+                    setNewObject();
+                  }}
+                  className="h-[55px] w-[140px] border border-[rgb(46,39,41)] font-semibold text-[#2E2729] hover:bg-[#41373a] hover:text-white transition delay-75 ease-in-out cursor-pointer lg:text-lg"
+                >
+                  Add to Cart{" "}
+                  {count !== 0 && (
+                    <span className="bg-[#41373a] rounded-md p-0.5 text-white">{`+${count}`}</span>
+                  )}
                 </button>
                 <Link
                   className="underline font-medium lg:text-lg"
@@ -186,30 +280,32 @@ export default function Page() {
                   Go to cart
                 </Link>
               </div>
-             {count !== 0 && (<div className="py-5 flex flex-row items-center gap-x-2">
-                <div className="flex flex-row gap-x-1 items-center">
-                  <Image
-                    src={vector1}
-                    priority
-                    alt="vector"
-                    className="h-[30px] w-[34px]"
-                  />
-                  <p className="underline cursor-pointer text-sm font-medium lg:text-lg">
-                    Pick another color choice
-                  </p>
+              {count !== 0 && (
+                <div className="py-5 flex flex-row items-center gap-x-2">
+                  <div className="flex flex-row gap-x-1 items-center">
+                    <Image
+                      src={vector1}
+                      priority
+                      alt="vector"
+                      className="h-[30px] w-[34px]"
+                    />
+                    <p className="underline cursor-pointer text-sm font-medium lg:text-lg">
+                      Pick another color choice
+                    </p>
+                  </div>
+                  {/* <Image src={vector2} alt="vector" priority className="h-[32px]" /> */}
+                  <span className=" border-none w-[1px] h-[32px] bg-black"></span>
+                  <div className="flex flex-row gap-x-1 items-center">
+                    <p className="text-sm font-medium lg:text-lg">
+                      New chosen color
+                    </p>
+                    <i>
+                      <IoIosArrowRoundForward />
+                    </i>
+                    <span className="bg-[#FB1CBF] h-[30px] w-[34px]"></span>
+                  </div>
                 </div>
-                {/* <Image src={vector2} alt="vector" priority className="h-[32px]" /> */}
-                <span className=" border-none w-[1px] h-[32px] bg-black"></span>
-                <div className="flex flex-row gap-x-1 items-center">
-                  <p className="text-sm font-medium lg:text-lg">
-                    New chosen color
-                  </p>
-                  <i>
-                    <IoIosArrowRoundForward />
-                  </i>
-                  <span className="bg-[#FB1CBF] h-[30px] w-[34px]"></span>
-                </div>
-              </div>)}
+              )}
             </div>
           </div>
         </section>

@@ -42,6 +42,12 @@ export default function Home() {
   const [getProductId, setGetProductId] = useState<number>();
   const router = useRouter();
 
+  function setCartArr (){
+    const defaultCartArr: object[] = [];
+    sessionStorage.setItem('cartItems', JSON.stringify(defaultCartArr));
+    console.log("Cart Array Set");
+  }
+
   function setProductId (e: number){
     console.log(e);
     setGetProductId(e);
@@ -55,6 +61,10 @@ export default function Home() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProductId])
+
+  useEffect(()=>{
+    setCartArr();
+  }, [])
 
   return (
     <Layout>

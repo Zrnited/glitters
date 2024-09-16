@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 // import { useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
@@ -7,6 +8,8 @@ import { usePathname } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const [searchbar, setSearchbar] = useState<boolean>(false);
+  const [logoutBar, setLogoutBar] = useState<boolean>(false);
 
   function checkPath() {
     if (path === "/signup") {
@@ -25,10 +28,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function showSearchbar (){
+    if(logoutBar){
+      setLogoutBar(false);
+      setSearchbar(!searchbar);
+    } else {
+      setSearchbar(!searchbar);
+    }
+  }
+
+  function showLogoutBar (){
+    if(searchbar){
+      setSearchbar(false);
+      setLogoutBar(!logoutBar);
+    } else {
+      setLogoutBar(!logoutBar);
+    }
+  }
+
   return (
     <div className="flex justify-center">
       <div className="container">
-        <Navbar />
+        <Navbar searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
         {/* <Sidebar /> */}
         <main>
           {children}

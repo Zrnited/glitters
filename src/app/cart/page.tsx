@@ -57,7 +57,7 @@ export default function Page() {
                     </button>
                   </div>
                 </div>
-                <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:flex-row">
+                <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
                   <p className="text-lg">Purple</p>
                   <div className="flex flex-row gap-x-2">
                     <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
@@ -116,8 +116,11 @@ export default function Page() {
                     </button>
                   </div>
                 </div>
-                <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:flex-row">
-                  <p className="text-lg">Purple</p>
+                <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
+                  <div className="flex flex-row gap-1 justify-center items-center xl:items-start xl:flex-col">
+                    <p>Choice color</p>
+                    <span className="bg-[#FB1CBF] mb-2 h-[20px] w-[60px] xl:w-[91px]"></span>
+                  </div>
                   <div className="flex flex-row gap-x-2">
                     <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
                       4
@@ -138,7 +141,7 @@ export default function Page() {
           </div>
 
           {/* Order div */}
-          <div className="md:border-l border-[#2E2729] md:w-2/3">
+          <div className="md:border-l border-[#2E2729] md:w-1/2">
             <div className="md:w-full p-3">
               <form className="flex flex-col gap-y-3">
                 <h2 className="text-2xl font-medium">Complete Order</h2>
