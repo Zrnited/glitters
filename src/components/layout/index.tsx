@@ -10,6 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [searchbar, setSearchbar] = useState<boolean>(false);
   const [logoutBar, setLogoutBar] = useState<boolean>(false);
+  const [isLoggedin, setIsLoggedin] = useState<boolean>(false);
 
   function checkPath() {
     if (path === "/signup") {
@@ -46,10 +47,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
+
   return (
     <div className="flex justify-center">
       <div className="container">
-        <Navbar searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
+        <Navbar isLoggedin={isLoggedin} searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
         {/* <Sidebar /> */}
         <main>
           {children}
