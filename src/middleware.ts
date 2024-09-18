@@ -56,7 +56,7 @@ export function middleware(request: NextRequest){
   }
 
   //checks if a user isn't logged in before trying to access the cart page and then redirects to login
-  if(pathname === '/cart'){
-    return NextResponse.redirect(new URL("/signin", request.url));
-  }
+  // if(pathname === '/cart'){
+  //   return NextResponse.redirect(new URL("/signin", request.url));
+  // }
 }

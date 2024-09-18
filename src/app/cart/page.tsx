@@ -1,3 +1,4 @@
+"use client";
 import Layout from "@/components/layout";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +40,7 @@ export default function Page() {
                   </p>
                 </div>
                 <div className="lg:hidden">
-                  <div className="flex flex-row gap-5 text-sm">
+                  <div className="flex flex-row gap-5 text-sm font-semibold">
                     <p>N50,000</p>
                     <p>Purple</p>
                   </div>
@@ -95,7 +96,7 @@ export default function Page() {
                   </p>
                 </div>
                 <div className="lg:hidden">
-                  <div className="flex flex-row gap-5 text-sm">
+                  <div className="flex flex-row gap-5 text-sm font-semibold">
                     <p>N50,000</p>
                     <div className="flex flex-row items-center gap-x-1">
                       <p>Color</p>
