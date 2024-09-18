@@ -1,15 +1,17 @@
 "use client";
-import { useState } from "react";
+import { use, useState } from "react";
 // import { useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
 import { usePathname } from "next/navigation";
+import Sidebar from "./sidebar";
 // import Sidebar from "./sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [searchbar, setSearchbar] = useState<boolean>(false);
   const [logoutBar, setLogoutBar] = useState<boolean>(false);
+  const [aside, setAside] = useState<boolean>(false);
   const [isLoggedin, setIsLoggedin] = useState<boolean>(false);
 
   function checkPath() {
@@ -51,8 +53,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex justify-center">
       <div className="container">
-        <Navbar isLoggedin={isLoggedin} searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
-        {/* <Sidebar /> */}
+        <Navbar setAside={setAside} isLoggedin={isLoggedin} searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
+        <Sidebar aside={aside} setAside={setAside} />
         <main>
           {children}
         </main>

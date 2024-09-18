@@ -6,11 +6,13 @@ import cart from "@/assets/icons/shopping-cart-icon.png";
 import account from "@/assets/icons/account-circle-icon.png";
 import logout from "@/assets/icons/logout.png";
 import Link from "next/link";
+import { Dispatch, SetStateAction } from "react";
 
 export interface NavProps {
   searchbar: boolean;
   logoutBar: boolean;
   isLoggedin: boolean;
+  setAside: Dispatch<SetStateAction<boolean>>
   showSearchbar(): void;
   showLogoutBar(): void;
 }
@@ -21,6 +23,7 @@ export default function Navbar({
   showLogoutBar,
   showSearchbar,
   isLoggedin,
+  setAside
 }: NavProps) {
   return (
     <header>
@@ -114,6 +117,7 @@ export default function Navbar({
             src={hamburgerMenu}
             alt="menu-icon"
             className="w-[30px] h-[30px]"
+            onClick={()=>setAside(true)}
           />
         </button>
       </nav>
