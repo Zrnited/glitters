@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/glittersLogo.png";
@@ -12,6 +12,29 @@ export interface AsideProps {
 }
 
 export default function Sidebar ({aside, setAside}: AsideProps) {
+
+  // let cartArray: object[] = [];
+  // console.log(cartArray);
+  const [cartItems, setCartItems] = useState<Array<object>>();
+
+  function getCartArr() {
+    const cartItems = sessionStorage.getItem("cartItems");
+    if (!cartItems) {
+      // console.log("Cannot find cart in session storage");
+      return;
+    } else {
+      const exisCartArr: object[] = JSON.parse(cartItems);
+      // console.log(exisCartArr);
+      setCartItems(exisCartArr);
+      // console.log("existing cart array gotten and set to cartArr");
+    }
+  }
+
+  useEffect(()=>{
+      getCartArr();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
     return (
       <>
         {aside === true && (<div onClick={()=>setAside(false)} className="bg-overlay fixed top-0 left-0 right-0 bottom-0 z-20"></div>)}
@@ -56,7 +79,7 @@ export default function Sidebar ({aside, setAside}: AsideProps) {
                 <div className="flex flex-row gap-x-2 items-center cursor-pointer p-2">
                   <Image src={cartIcon} priority alt="icon" className="w-[30px] h-auto" />
                   <Link href={'/cart'} className="text-lg font-semibold">Cart</Link>
-                  <p className="w-[20px] h-[20px] text-center text-white font-medium rounded-full bg-red-500">6</p>
+                  <p className="w-[20px] h-[20px] text-center text-white font-medium rounded-full bg-red-500">{cartItems ? `${cartItems.length}` :  `0`}</p>
                 </div>
                 <div className="flex flex-row gap-x-2 items-center cursor-pointer p-2">
                   <Image src={accIcon} priority alt="icon" className="w-[30px] h-auto" />

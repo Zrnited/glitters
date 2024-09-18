@@ -16,7 +16,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 45000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "white"
     },
     {
         id: 2,
@@ -27,7 +28,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 50000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "pink"
     },
     {
         id: 3,
@@ -38,7 +40,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 39000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "Purple"
     },
     {
         id: 4,
@@ -49,7 +52,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 35000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "black"
     },
     {
         id: 5,
@@ -60,7 +64,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 60000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "black"
     },
     {
         id: 6,
@@ -71,7 +76,8 @@ const products = [
         about: "Step into luxury with our bestselling Purple Fur Bag. Crafted from the softest faux fur, this chic accessory is a perfect blend of style and comfort. Its rich purple hue adds a pop of color to any outfit, making it a versatile statement piece for day or night. Spacious enough to carry your essentials, yet compact enough to stay effortlessly elegant, this bag is designed for those who love to stand out. Whether you’re heading to a casual brunch or a glamorous evening out, the Purple Fur Bag is your go-to for adding a touch of opulence to your look.",
         price: 50000,
         status: "Available",   
-        Category: "Bags"
+        category: "Bags",
+        color: "black"
     },
 ]
 

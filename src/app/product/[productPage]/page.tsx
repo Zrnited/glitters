@@ -20,7 +20,8 @@ export interface Products {
   about: string;
   price: number;
   status: string;
-  Category: string;
+  category: string;
+  color: string;
   quantity?: number;
 }
 
@@ -33,7 +34,8 @@ export interface newObject {
   about: string;
   price: number;
   status: string;
-  Category: string;
+  category: string;
+  color: string;
   quantity: number;
 }
 
@@ -46,7 +48,8 @@ export interface cartObjects {
   about?: string;
   price?: number;
   status?: string;
-  Category?: string;
+  category?: string;
+  color?: string;
   quantity?: number;
 }
 
@@ -56,7 +59,7 @@ export default function Page() {
   const [prod, setProd] = useState<Products>();
   const [count, setCount] = useState<number>(0);
   const [cartArr, setCartArr] = useState<Array<cartObjects>>([]);
-  console.log(cartArr);
+  // console.log(cartArr);
 
   const [newObj, setNewObj] = useState<newObject>({
     id: 0,
@@ -67,7 +70,8 @@ export default function Page() {
     about: "",
     price: 0,
     status: "",
-    Category: "",
+    category: "",
+    color: "",
     quantity: count
   });
   const router = useRouter();
@@ -127,7 +131,8 @@ export default function Page() {
         about: currentProduct.about,
         price: currentProduct.price,
         status: currentProduct.status,
-        Category: currentProduct.Category,
+        category: currentProduct.category,
+        color: currentProduct.color,
         quantity: count + 1,
       });
     } else {
@@ -169,7 +174,7 @@ export default function Page() {
         console.log("New object added");
       }
     } else {
-      console.log('Welcome to products page');
+      // console.log('Welcome to products page');
       return
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

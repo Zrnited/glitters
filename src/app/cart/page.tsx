@@ -1,11 +1,100 @@
 "use client";
 import Layout from "@/components/layout";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import cartImg from "@/assets/images/cart-img.png";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
+import { useEffect, useState } from "react";
+
+export interface cartObject {
+  id: number;
+  coverImg: StaticImageData;
+  fullImg: StaticImageData;
+  name: string;
+  desc: string;
+  about: string;
+  price: number;
+  status: string;
+  category: string;
+  color: string;
+  quantity: number;
+}
 
 export default function Page() {
+  const [cartProducts, setCartProducts] = useState<Array<cartObject>>([]);
+  // console.log(cartProducts);
+  const [qtyCount, setQtyCount] = useState<number>(0);
+  // console.log(qtyCount);
+  const [currprodid, setCurrProdId] = useState<number>();
+
+  const itemsPrice: number[] = cartProducts.map(
+    (item) => item.price * item.quantity
+  );
+  // console.log(itemsPrice);
+  let sumofPrices = 0;
+  for (let num of itemsPrice) {
+    sumofPrices = sumofPrices + num;
+  }
+  // console.log(sumofPrices);
+
+  function getCartArr() {
+    const cartItems = sessionStorage.getItem("cartItems");
+    if (!cartItems) {
+      console.log("Cannot find cart in session storage");
+      return;
+    } else {
+      const exisCartArr: cartObject[] = JSON.parse(cartItems);
+      setCartProducts(exisCartArr);
+      console.log("existing cart array gotten and set to cartArr");
+    }
+  }
+
+  function increaseQty(e: cartObject) {
+    //find
+    const item = cartProducts?.find((item) => item?.id === e.id);
+    setCurrProdId(e.id);
+
+    // if found, edit the properties
+    if (item) {
+      setQtyCount(item.quantity + 1);
+      // setCurrProdId(e.id);
+      item.quantity = item.quantity + 1;
+    } else {
+      return;
+    }
+    return item;
+  }
+
+  function decreaseQty(e: cartObject) {
+    //find
+    const item = cartProducts?.find((item) => item?.id === e.id);
+    setCurrProdId(e.id);
+
+    // if found, edit the properties
+    if (item) {
+      setQtyCount(item.quantity - 1);
+      // setCurrProdId(e.id);
+      if (item.quantity === 1) {
+        if (qtyCount === 1) {
+          setQtyCount(1);
+          return item.quantity === 1;
+        } else {
+          return;
+        }
+      } else {
+        item.quantity = item.quantity - 1;
+      }
+    } else {
+      return;
+    }
+    return item;
+  }
+
+  useEffect(() => {
+    getCartArr();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Layout>
       <section className="px-5">
@@ -23,7 +112,77 @@ export default function Page() {
         <div className="border border-[#2E2729] md:flex md:flex-row">
           {/* cart div */}
           <div className="p-2 h-auto flex flex-col gap-y-2 md:w-3/4">
-            <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
+            {/* cart-item */}
+            {cartProducts?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto"
+                >
+                  <Image
+                    alt="cart-img"
+                    priority
+                    src={item.coverImg}
+                    className="w-[112px] h-[112px] lg:w-[80px] lg:h-[80px]"
+                  />
+                  <div className="lg:flex lg:flex-row lg:gap-x-5 lg:items-center">
+                    <div>
+                      <h1 className="font-medium text-xl lg:text-2xl">
+                        {item.name}
+                      </h1>
+                      <p className="text-sm lg:text-lg">{item.desc}</p>
+                    </div>
+                    <div className="lg:hidden">
+                      <div className="flex flex-row gap-5 text-sm font-semibold">
+                        <p>{`N${(item.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</p>
+                        <p>{item.color}</p>
+                      </div>
+                      <div className="flex flex-row gap-x-1">
+                        <button
+                          onClick={() => increaseQty(item)}
+                          className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                        >
+                          <BsChevronUp color="white" size={20} />
+                        </button>
+
+                        <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
+                          {currprodid !== item.id
+                            ? `${item.quantity}`
+                            : `${qtyCount}`}
+                        </span>
+
+                        <button
+                          onClick={() => decreaseQty(item)}
+                          className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                        >
+                          <BsChevronDown color="white" size={20} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
+                      <p className="text-lg font-semibold">{item.color}</p>
+                      <div className="flex flex-row gap-x-2">
+                        <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
+                          {item.quantity}
+                        </span>
+
+                        <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]" onClick={()=>increaseQty(item)}>
+                          <BsChevronUp color="white" size={20} />
+                        </button>
+
+                        <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]" onClick={()=>decreaseQty(item)}>
+                          <BsChevronDown color="white" size={20} />
+                        </button>
+                      </div>
+                      <p className="text-lg font-semibold">{`N${(item.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Revert back if any issue */}
+            {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
               <Image
                 alt="cart-img"
                 priority
@@ -76,10 +235,10 @@ export default function Page() {
                   <p className="text-lg">N50,000</p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            {/* color selection */}
-            <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
+            {/* cart item with color selection */}
+            {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
               <Image
                 alt="cart-img"
                 priority
@@ -138,6 +297,11 @@ export default function Page() {
                   <p className="text-lg">N50,000</p>
                 </div>
               </div>
+            </div> */}
+
+            {/* sub total */}
+            <div className="text-end">
+              <h1 className="font-semibold text-xl lg:text-2xl">{`Subtotal: N${sumofPrices.toLocaleString(undefined, {maximumFractionDigits:2})}.00`}</h1>
             </div>
           </div>
 

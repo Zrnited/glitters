@@ -13,7 +13,8 @@ export interface ProductsProps {
     about: string;
     price: number;
     status: string;
-    Category: string;
+    category: string;
+    color: string;
   }[];
   setProductId(e: number): void;
   // setGetProductId: Dispatch<SetStateAction<number | undefined>>
