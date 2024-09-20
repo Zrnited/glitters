@@ -18,13 +18,13 @@ export default function Sidebar({ aside, cartItems, setAside }: AsideProps) {
       {aside === true && (
         <div
           onClick={() => setAside(false)}
-          className="bg-overlay fixed top-0 left-0 right-0 bottom-0 z-30"
+          className="bg-overlay fixed top-0 left-0 right-0 bottom-0 z-20"
         ></div>
       )}
       <aside
         className={
           aside
-            ? "fixed h-full bg-[#F7EBEE] shadow-lg z-40 right-0 top-0 w-2/3 transition-all ease-in-out delay-100 p-2 sm:hidden"
+            ? "fixed h-full bg-[#F7EBEE] shadow-lg z-30 right-0 top-0 w-2/3 transition-all ease-in-out delay-100 p-2 sm:hidden"
             : "-right-full fixed h-full bg-[#F7EBEE] transition-all ease-in-out delay-100 top-0 w-1/2"
         }
       >

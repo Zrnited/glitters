@@ -39,13 +39,24 @@ export default function Home() {
   ];
 
   // const [currentGroup, setCurrentGroup] = useState<string>("");
-  const [getProductId, setGetProductId] = useState<number>();
   const router = useRouter();
+  const [getProductId, setGetProductId] = useState<number>();
+  const [cartArray, setCartArray] = useState<Array<object>>([]);
+  console.log(cartArray);
 
-  function setCartArr (){
-    const defaultCartArr: object[] = [];
-    sessionStorage.setItem('cartItems', JSON.stringify(defaultCartArr));
-    console.log("Cart Array Set");
+  //get and set cart array
+  function getAndSetCartArr (){
+    const getArray = sessionStorage.getItem("cartItems");
+    if(getArray){
+      const cartArray: object[] = JSON.parse(getArray);
+      setCartArray(cartArray);
+      console.log("Cart Parsed from Session Storage");
+    } else {
+      const defaultCartArr: object[] = [];
+      sessionStorage.setItem('cartItems', JSON.stringify(defaultCartArr));
+      setCartArray(defaultCartArr);
+      console.log("Cart Array Set to empty");
+    }
   }
 
   function setProductId (e: number){
@@ -63,7 +74,7 @@ export default function Home() {
   }, [getProductId])
 
   useEffect(()=>{
-    setCartArr();
+    getAndSetCartArr();
   }, [])
 
   return (
@@ -80,7 +91,7 @@ export default function Home() {
           {/* carousel div */}
           <div className="flex flex-row gap-x-3 overflow-scroll activity sm:overflow-hidden md:justify-center md:w-full md:gap-x-6 lg:w-3/4">
             {/* video div */}
-            <div className="w-[168px] h-[300px] rounded-xl -z-10 md:h-[380px] md:w-[213px] lg:w-[180px] lg:h-[320px] xl:w-[253px] xl:h-[450px]">
+            <div className="w-[168px] h-[300px] rounded-xl z-0 md:h-[380px] md:w-[213px] lg:w-[180px] lg:h-[320px] xl:w-[253px] xl:h-[450px]">
               <NextVideo
                 className="object-fill bg-cover h-full w-full"
                 accentColor="#CF8292"
@@ -146,7 +157,7 @@ export default function Home() {
           })}
         </div>
       </section>
-      <Products productsData={products} setProductId={setProductId}/>
+      <Products setCartArray={setCartArray} productsData={products} setProductId={setProductId}/>
     </Layout>
   );
 }

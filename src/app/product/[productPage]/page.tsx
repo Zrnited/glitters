@@ -316,7 +316,7 @@ export default function Page() {
         </section>
       )}
       {!prod && <Loading />}
-      <Products productsData={products} setProductId={setProductId} />
+      <Products setCartArray={setCartArr} productsData={products} setProductId={setProductId} />
     </Layout>
   );
 }

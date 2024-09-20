@@ -1,6 +1,6 @@
 import { StaticImageData } from "next/image";
 import Image from "next/image";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 // import { Dispatch, SetStateAction } from "react";
 
 export interface ProductsProps {
@@ -17,12 +17,50 @@ export interface ProductsProps {
     color: string;
   }[];
   setProductId(e: number): void;
+  setCartArray: Dispatch<SetStateAction<object[]>>
   // setGetProductId: Dispatch<SetStateAction<number | undefined>>
 }
 
-export function Products({ productsData, setProductId }: ProductsProps) {
+export interface productItem {
+    id: number;
+    coverImg: StaticImageData;
+    fullImg: StaticImageData;
+    name: string;
+    desc: string;
+    about: string;
+    price: number;
+    status: string;
+    category: string;
+    color: string;
+    quantity?: number;
+}
+
+export function Products({ productsData, setProductId, setCartArray }: ProductsProps) {
 
   const [currentGroup, setCurrentGroup] = useState<string>("");
+
+  function pushProductToCart (productItem: productItem){
+    // console.log(productItem);
+    const selectedProduct = {
+      id: productItem.id,
+      coverImg: productItem.coverImg,
+      fullImg: productItem.fullImg,
+      name: productItem.name,
+      desc: productItem.desc,
+      about: productItem.about,
+      price: productItem.price,
+      status: productItem.status,
+      category: productItem.category,
+      color: productItem.color,
+      quantity: 1
+    }
+    setCartArray((prevState)=>{
+      return [
+        ...prevState,
+        selectedProduct
+      ]
+    })
+  }
   
   return (
     <section className="pt-10 pb-10 px-5 lg:pt-0 lg:pb-10 xl:px-2">
@@ -85,7 +123,7 @@ export function Products({ productsData, setProductId }: ProductsProps) {
           return (
             <div
               key={index}
-              className="h-[244px] w-[190px] bg-[#E8C3CB] border border-black -z-10 relative sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px]"
+              className="h-[244px] w-[190px] bg-[#E8C3CB] border border-black z-0 relative sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px]"
             >
               <div className="absolute -right-2 -bottom-2 border border-black bg-white h-[244px] w-[190px] p-1 sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px] md:p-2">
                 <Image
@@ -125,7 +163,7 @@ export function Products({ productsData, setProductId }: ProductsProps) {
                   >
                     Shop Now
                   </button>
-                  <button className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px]">
+                  <button onClick={()=>pushProductToCart(prod)} className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px]">
                     Add to Cart +
                   </button>
                 </div>

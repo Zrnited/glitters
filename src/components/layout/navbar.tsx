@@ -30,7 +30,7 @@ export default function Navbar({
   return (
     <header>
       <nav className="fixed top-0 right-0 left-0 z-20 xl:flex xl:justify-center bg-[#F7EBEE]">
-        <div className="m-3 p-3 border border-[#2E2729] bg-[#F7EBEE] flex flex-row justify-between items-center z-10 xl:container lg:px-8">
+        <div className="m-3 p-3 border border-[#2E2729] bg-[#F7EBEE] flex flex-row justify-between items-center xl:container lg:px-8">
           <ul className="hidden sm:flex flex-row gap-x-4 lg:font-medium lg:gap-x-6">
             <li>
               <Link className="md:text-lg" href={"/"}>
