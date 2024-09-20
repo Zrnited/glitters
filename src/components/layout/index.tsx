@@ -1,5 +1,5 @@
 "use client";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 // import { useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
@@ -13,6 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [logoutBar, setLogoutBar] = useState<boolean>(false);
   const [aside, setAside] = useState<boolean>(false);
   const [isLoggedin, setIsLoggedin] = useState<boolean>(false);
+  const [cartItems, setCartItems] = useState<Array<object>>();
 
   function checkPath() {
     if (path === "/signup") {
@@ -31,8 +32,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function showSearchbar (){
-    if(logoutBar){
+  function showSearchbar() {
+    if (logoutBar) {
       setLogoutBar(false);
       setSearchbar(!searchbar);
     } else {
@@ -40,8 +41,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function showLogoutBar (){
-    if(searchbar){
+  function showLogoutBar() {
+    if (searchbar) {
       setSearchbar(false);
       setLogoutBar(!logoutBar);
     } else {
@@ -49,15 +50,38 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function getCartArr() {
+    const cartItems = sessionStorage.getItem("cartItems");
+    if (!cartItems) {
+      // console.log("Cannot find cart in session storage");
+      return;
+    } else {
+      const exisCartArr: object[] = JSON.parse(cartItems);
+      // console.log(exisCartArr);
+      setCartItems(exisCartArr);
+      // console.log("existing cart array gotten and set to cartArr");
+    }
+  }
+
+  useEffect(() => {
+    getCartArr();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex justify-center">
       <div className="container">
-        <Navbar setAside={setAside} isLoggedin={isLoggedin} searchbar={searchbar} showSearchbar={showSearchbar} logoutBar={logoutBar} showLogoutBar={showLogoutBar} />
-        <Sidebar aside={aside} setAside={setAside} />
-        <main>
-          {children}
-        </main>
+        <Navbar
+          cartItems={cartItems}
+          setAside={setAside}
+          isLoggedin={isLoggedin}
+          searchbar={searchbar}
+          showSearchbar={showSearchbar}
+          logoutBar={logoutBar}
+          showLogoutBar={showLogoutBar}
+        />
+        <Sidebar cartItems={cartItems} aside={aside} setAside={setAside} />
+        <main>{children}</main>
         {checkPath() && <Footer />}
       </div>
     </div>

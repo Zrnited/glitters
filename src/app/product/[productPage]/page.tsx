@@ -208,7 +208,7 @@ export default function Page() {
     <Layout>
       {/* Where the session storage object comes in */}
       {prod && (
-        <section className="px-5 py-5 lg:mb-5">
+        <section className="px-5 pt-5 pb-5 sm:pt-20 lg:mb-5">
           <div className="bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center sm:hidden">
             <p className="text-sm">
               We&apos;re giving 20% discount for our first 1,000 orders. Use

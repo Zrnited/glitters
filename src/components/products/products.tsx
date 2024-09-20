@@ -85,7 +85,7 @@ export function Products({ productsData, setProductId }: ProductsProps) {
           return (
             <div
               key={index}
-              className="h-[244px] w-[190px] bg-[#E8C3CB] border border-black relative sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px]"
+              className="h-[244px] w-[190px] bg-[#E8C3CB] border border-black -z-10 relative sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px]"
             >
               <div className="absolute -right-2 -bottom-2 border border-black bg-white h-[244px] w-[190px] p-1 sm:h-[300px] sm:w-[246px] md:h-[480px] md:w-[407px] md:p-2">
                 <Image
