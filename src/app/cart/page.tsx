@@ -97,7 +97,7 @@ export default function Page() {
 
   return (
     <Layout>
-      <section className="px-5">
+      <section className="px-5 pt-20">
         <div className="py-3">
           <p className="font-medium">
             <Link className="text-[#CF8292]" href={"/cart"}>

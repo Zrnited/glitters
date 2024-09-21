@@ -14,6 +14,7 @@ import customerCare from "@/assets/icons/customercare.png";
 import professionalism from "@/assets/icons/professional.png";
 import topLadies from "@/assets/icons/people.png";
 
+
 export default function Home() {
   const experience = [
     {
@@ -42,7 +43,7 @@ export default function Home() {
   const router = useRouter();
   const [getProductId, setGetProductId] = useState<number>();
   const [cartArray, setCartArray] = useState<Array<object>>([]);
-  console.log(cartArray);
+  // console.log(cartArray);
 
   //get and set cart array
   function getAndSetCartArr (){
@@ -157,7 +158,7 @@ export default function Home() {
           })}
         </div>
       </section>
-      <Products setCartArray={setCartArray} productsData={products} setProductId={setProductId}/>
+      <Products cartArray={cartArray} setCartArray={setCartArray} productsData={products} setProductId={setProductId}/>
     </Layout>
   );
 }

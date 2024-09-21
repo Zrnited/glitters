@@ -5,6 +5,8 @@ import Footer from "./footer";
 import Navbar from "./navbar";
 import { usePathname } from "next/navigation";
 import Sidebar from "./sidebar";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import Sidebar from "./sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -70,6 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex justify-center">
+      <ToastContainer />
       <div className="container">
         <Navbar
           cartItems={cartItems}

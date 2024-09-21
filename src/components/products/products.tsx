@@ -1,7 +1,22 @@
 import { StaticImageData } from "next/image";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { toast } from 'react-toastify';
 // import { Dispatch, SetStateAction } from "react";
+
+export interface cartObjects {
+  id?: number;
+  coverImg?: StaticImageData;
+  fullImg?: StaticImageData;
+  name?: string;
+  desc?: string;
+  about?: string;
+  price?: number;
+  status?: string;
+  category?: string;
+  color?: string;
+  quantity?: number;
+}
 
 export interface ProductsProps {
   productsData: {
@@ -17,51 +32,83 @@ export interface ProductsProps {
     color: string;
   }[];
   setProductId(e: number): void;
-  setCartArray: Dispatch<SetStateAction<object[]>>
+  setCartArray: Dispatch<SetStateAction<object[]>>;
+  cartArray: cartObjects[];
   // setGetProductId: Dispatch<SetStateAction<number | undefined>>
 }
 
 export interface productItem {
-    id: number;
-    coverImg: StaticImageData;
-    fullImg: StaticImageData;
-    name: string;
-    desc: string;
-    about: string;
-    price: number;
-    status: string;
-    category: string;
-    color: string;
-    quantity?: number;
+  id: number;
+  coverImg: StaticImageData;
+  fullImg: StaticImageData;
+  name: string;
+  desc: string;
+  about: string;
+  price: number;
+  status: string;
+  category: string;
+  color: string;
+  quantity?: number;
 }
 
-export function Products({ productsData, setProductId, setCartArray }: ProductsProps) {
-
+export function Products({
+  productsData,
+  setProductId,
+  setCartArray,
+  cartArray,
+}: ProductsProps) {
   const [currentGroup, setCurrentGroup] = useState<string>("");
+  const [check, setCheck] = useState<number>(0);
 
-  function pushProductToCart (productItem: productItem){
-    // console.log(productItem);
-    const selectedProduct = {
-      id: productItem.id,
-      coverImg: productItem.coverImg,
-      fullImg: productItem.fullImg,
-      name: productItem.name,
-      desc: productItem.desc,
-      about: productItem.about,
-      price: productItem.price,
-      status: productItem.status,
-      category: productItem.category,
-      color: productItem.color,
-      quantity: 1
+  function pushProductToCart(productItem: productItem) {
+    //find
+    const item = cartArray?.find((item) => item?.id === productItem.id);
+
+    //if found, ignore cos it's already there
+    if (item) {
+      //toast notify already there.
+      toast.warn("Item already added to cart");
+      return;
+    } else {
+      //add and toast notify of addition
+      const selectedProduct = {
+        id: productItem.id,
+        coverImg: productItem.coverImg,
+        fullImg: productItem.fullImg,
+        name: productItem.name,
+        desc: productItem.desc,
+        about: productItem.about,
+        price: productItem.price,
+        status: productItem.status,
+        category: productItem.category,
+        color: productItem.color,
+        quantity: 1,
+      };
+      setCartArray((prevState) => {
+        return [...prevState, selectedProduct];
+      });
+      toast.success("Item added to cart successfully");
     }
-    setCartArray((prevState)=>{
-      return [
-        ...prevState,
-        selectedProduct
-      ]
-    })
+    // console.log(productItem);
+    // setCartToSessionStorage(cartArray);
+    setCheck(check + 1);
   }
-  
+
+  function setCartToSessionStorage (cartItems: object[]){
+    // const defaultCartArr: object[] = [];
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    // console.log("Cart Array Set");
+  }
+
+  useEffect(()=>{
+    if(check === 0){
+      return;
+    } else {
+      setCartToSessionStorage(cartArray);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [check])
+
   return (
     <section className="pt-10 pb-10 px-5 lg:pt-0 lg:pb-10 xl:px-2">
       <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
@@ -142,7 +189,10 @@ export function Products({ productsData, setProductId, setCartArray }: ProductsP
                     </p>
                   </div>
                   <div className="flex flex-row gap-x-1 items-center md:flex-col md:items-end">
-                    <h3 className="font-semibold md:text-3xl">{`N${(prod.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</h3>
+                    <h3 className="font-semibold md:text-3xl">{`N${prod.price.toLocaleString(
+                      undefined,
+                      { maximumFractionDigits: 2 }
+                    )}`}</h3>
                     <p className="text-[10px] text-white bg-[#00A460] px-1 md:text-sm">
                       {prod.status}
                     </p>
@@ -150,11 +200,14 @@ export function Products({ productsData, setProductId, setCartArray }: ProductsP
                 </div>
                 <div className="flex flex-row justify-between items-center mt-0.5 md:mt-7">
                   <button
-                    onClick={()=>{
+                    onClick={() => {
                       const curr = prod;
-                      
+
                       //set to sessionStorage
-                      sessionStorage.setItem('currProduct', JSON.stringify(curr));
+                      sessionStorage.setItem(
+                        "currProduct",
+                        JSON.stringify(curr)
+                      );
 
                       //send ID to pathname
                       setProductId(prod.id);
@@ -163,7 +216,10 @@ export function Products({ productsData, setProductId, setCartArray }: ProductsP
                   >
                     Shop Now
                   </button>
-                  <button onClick={()=>pushProductToCart(prod)} className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px]">
+                  <button
+                    onClick={() => pushProductToCart(prod)}
+                    className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px]"
+                  >
                     Add to Cart +
                   </button>
                 </div>
