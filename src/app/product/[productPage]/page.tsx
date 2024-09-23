@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/layout";
 import Loading from "@/components/loading/loading";
@@ -135,6 +136,7 @@ export default function Page() {
         color: currentProduct.color,
         quantity: count + 1,
       });
+      toast.success("Item added to cart");
     } else {
       return;
     }
@@ -278,12 +280,12 @@ export default function Page() {
                     <span className="bg-[#41373a] rounded-md p-0.5 text-white">{`+${count}`}</span>
                   )}
                 </button>
-                <Link
+                {count !== 0 && (<Link
                   className="underline font-medium lg:text-lg"
                   href={"/cart"}
                 >
                   Go to cart
-                </Link>
+                </Link>)}
               </div>
               {count !== 0 && (
                 <div className="py-5 flex flex-row items-center gap-x-2">
