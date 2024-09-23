@@ -3,6 +3,7 @@ import Layout from "@/components/layout";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import Link from "next/link";
 // import { cookies } from "next/headers";
+import { setCookie } from "../action/actions";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,6 +43,7 @@ export default function Page() {
   const [fieldErr, setFieldErr] = useState<FieldErrors>();
   // console.log(form);
   const [showPassword, SetShowPassword] = useState<boolean>(false);
+  const [islogged, setIsLogged] = useState<boolean>(false);
 
   function handleChange(e: any) {
     if (e.target) {
@@ -88,19 +90,27 @@ export default function Page() {
         ) {
           //allow access to other page
           toast.success("Login successful");
+          setCookie({
+            name: "glittersUserToken",
+            value: userData.email,
+            path: "/",
+            secure: true,
+          });
+          setIsLogged(true);
           // setInterval(() => {
-          //   router.push(`/`);
+          //   setIsLogged(true);
           // }, 2000);
+          router.push("/");
         } else {
-          toast.warn("Error logging in");
           setFormError(true);
         }
       } else {
         //redirect to sign up
         toast.warn("Please sign up first");
-        setInterval(() => {
-          router.push(`/signup`);
-        }, 2000);
+        // setInterval(() => {
+        //   router.push(`/signup`);
+        // }, 2000);
+        router.push("/signup");
       }
     }
   }

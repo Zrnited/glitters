@@ -42,6 +42,11 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userCreated, setUserCreated] = useState<boolean>(false);
   const [fieldErr, setFieldErr] = useState<FieldErrors>();
+  const [isLogged, setIsLogged] = useState<boolean>(false);
+
+  // if(isLogged){
+  //   router.push(`/signin`);
+  // }
 
   function handleChange(e: any) {
     if (e.target) {
@@ -73,9 +78,7 @@ export default function Page() {
     } else {
       setToStorage();
       setUserCreated(true);
-      setInterval(()=>{
-        router.push(`/signin`);
-      }, 2000)
+      router.push("/signin");
     }
   }
 

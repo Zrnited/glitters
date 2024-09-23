@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
  
@@ -31,10 +32,14 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest){
 
   //in a real-world scenario, tokens are used and gotten from cookies
-  const userToken = request.cookies.get("userToken")?.value;
+  const userToken = request.cookies.get("glittersUserToken")?.value;
 
+  //checks if a cookie exists
+  // function...
+  // const cookieStore = cookies();
+  // const hasCookies = cookieStore.has('');
+  // return '...' 
 
-  // console.log("middleware working!");
   const {pathname, searchParams} = request.nextUrl
   //defining public paths
 
@@ -58,5 +63,7 @@ export function middleware(request: NextRequest){
   // checks if a user isn't logged in before trying to access the cart page and then redirects to login
   if(!userToken && pathname === '/cart'){
     return NextResponse.redirect(new URL("/signin", request.url));
+  } else {
+    return NextResponse.next();
   }
 }
