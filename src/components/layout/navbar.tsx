@@ -1,12 +1,14 @@
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
+import { toast } from "react-toastify";
+import { deleteCookies } from "@/app/action/actions";
 import glittersLogo from "@/assets/images/glittersLogo.png";
 import hamburgerMenu from "@/assets/icons/menu-bar.png";
 import search from "@/assets/icons/search-icon.png";
 import cart from "@/assets/icons/shopping-cart-icon.png";
 import account from "@/assets/icons/account-circle-icon.png";
-import logout from "@/assets/icons/logout.png";
+import logoutIcon from "@/assets/icons/logout.png";
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
 
 export interface NavProps {
   searchbar: boolean;
@@ -16,11 +18,13 @@ export interface NavProps {
   setAside: Dispatch<SetStateAction<boolean>>
   showSearchbar(): void;
   showLogoutBar(): void;
+  logout(): void
 }
 
 export default function Navbar({
   searchbar,
   logoutBar,
+  logout,
   showLogoutBar,
   showSearchbar,
   isLoggedin,
@@ -91,7 +95,7 @@ export default function Navbar({
               {cartItems && (<p className="bg-red-500 w-[20px] h-[20px] text-center text-white rounded-full absolute -right-2 -top-1 text-xs place-content-center">{`${cartItems?.length}`}</p>)}
             </div>
             <div className="relative">
-            {!isLoggedin && (<Link href={"/signin"}>
+              {!isLoggedin && (<Link href={"/signin"}>
                 <Image
                   src={account}
                   alt="account-icon"
@@ -105,10 +109,14 @@ export default function Navbar({
                 onClick={showLogoutBar}
               />)}
               {logoutBar && (
-                <div className="bg-white absolute flex flex-row gap-x-3 px-4 items-center border border-black h-[50px] w-[115px] top-8 -left-20 cursor-pointer">
+                <div onClick={()=>{
+                  deleteCookies();
+                  logout();
+                  toast.success("Logged out successfully");
+                }} className="bg-white absolute flex flex-row gap-x-3 px-4 items-center border border-black h-[50px] w-[115px] top-8 -left-20 cursor-pointer">
                   <p className="text-[#FF0C10]">Logout</p>
                   <Image
-                    src={logout}
+                    src={logoutIcon}
                     alt="icon"
                     priority
                     className="w-[24px] h-[24px]"

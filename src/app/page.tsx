@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import { useRouter } from "next/navigation";
+import Aos from 'aos';
+import 'aos/dist/aos.css';
 import Image from "next/image";
 import Layout from "@/components/layout";
 import NextVideo from "next-video";
@@ -78,6 +80,13 @@ export default function Home() {
     getAndSetCartArr();
   }, [])
 
+  useEffect(()=>{
+    Aos.init({
+      duration: 1000,
+      once: false
+    })
+  })
+
   return (
     <Layout>
       <section className="p-5 sm:pt-28 lg:flex lg:flex-col lg:justify-center">
@@ -116,25 +125,25 @@ export default function Home() {
 
           {/* info div */}
           <div className="flex flex-col gap-4 lg:w-[460px]">
-            <h1 className="text-6xl font-semibold xl:text-[80px]">
+            <h1 data-aos="fade-up" className="text-6xl font-semibold xl:text-[80px]">
               Making every of your{" "}
               <span className="text-[#CF8292]">show up </span>glow.
             </h1>
-            <p className="font-medium xl:text-lg">
+            <p data-aos="fade-up" className="font-medium xl:text-lg">
               We serve and offer delivery nationwide. You order world class and
               we deliver world class.
             </p>
-            <button className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg">
+            <button data-aos="fade-up" className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg">
               Show Now
             </button>
           </div>
         </article>
       </section>
       <section className="py-5 px-5">
-        <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
+        <h1 data-aos="fade-up" className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
           What you experience shopping with us
         </h1>
-        <div className="py-10 grid grid-cols-2 gap-y-10 place-items-start sm:place-items-center md:grid-cols-4 md:place-items-start lg:gap-y-0 lg:gap-x-8 lg:py-20">
+        <div data-aos="fade-up" className="py-10 grid grid-cols-2 gap-y-10 place-items-start sm:place-items-center md:grid-cols-4 md:place-items-start lg:gap-y-0 lg:gap-x-8 lg:py-20">
           {experience?.map((exp, index) => {
             return (
               <div

@@ -2,6 +2,7 @@
 import Layout from "@/components/layout";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import Link from "next/link";
+import LoadingState from "@/components/loader/loader";
 // import { cookies } from "next/headers";
 import { setCookie } from "../action/actions";
 import { z } from "zod";
@@ -41,6 +42,7 @@ export default function Page() {
   const [storedUserData, setStoredUserData] = useState<StoredUserData>();
   const [formError, setFormError] = useState<boolean>(false);
   const [fieldErr, setFieldErr] = useState<FieldErrors>();
+  const [loadState, setLoadState] = useState<boolean>(false);
   // console.log(form);
   const [showPassword, SetShowPassword] = useState<boolean>(false);
   const [islogged, setIsLogged] = useState<boolean>(false);
@@ -69,6 +71,7 @@ export default function Page() {
   }
 
   function handleSubmit(e: any) {
+    setLoadState(true);
     e.preventDefault();
     const validatedFields = userDataSchema.safeParse({
       email: userData.email,
@@ -78,6 +81,7 @@ export default function Page() {
     if (hasErrors) setFieldErr(hasErrors);
     // console.log(validatedFields.error?.flatten().fieldErrors);
     if (!validatedFields.success) {
+      setLoadState(false);
       return toast.warn("Invalid credentials");
     } else {
       setFieldErr(undefined);
@@ -89,6 +93,7 @@ export default function Page() {
           userData.password === storedUserData?.password
         ) {
           //allow access to other page
+          setLoadState(false);
           toast.success("Login successful");
           setCookie({
             name: "glittersUserToken",
@@ -102,10 +107,12 @@ export default function Page() {
           // }, 2000);
           router.push("/");
         } else {
+          setLoadState(false);
           setFormError(true);
         }
       } else {
         //redirect to sign up
+        setLoadState(false);
         toast.warn("Please sign up first");
         // setInterval(() => {
         //   router.push(`/signup`);
@@ -123,7 +130,6 @@ export default function Page() {
     <Layout>
       <section className="w-full mt-10 pt-14 sm:flex sm:justify-center">
         <div className="flex flex-col gap-y-3 px-5 sm:w-[400px]">
-          {/* error state div. Uncomment when needed */}
           {formError && (
             <div className="bg-[#F5A6A7] text-[#960003] flex items-center justify-center h-[49px] md:place-self-center md:w-[312px]">
               <p>Invalid email address or password</p>
@@ -175,8 +181,9 @@ export default function Page() {
                 )}
               </i>
             </div>
-            <button className="h-[55px] bg-[#2E2729] text-white hover:bg-[#2b2426] transition delay-100">
-              Sign in to account
+            <button className="h-[55px] bg-[#2E2729] text-white flex justify-center items-center hover:bg-[#2b2426] transition delay-100">
+              <p>Sign in to account</p>
+              {loadState && (<i className="ml-3"><LoadingState height="30" width="30" /></i>)}
             </button>
           </form>
           <div className="flex flex-row justify-between items-start w-full">

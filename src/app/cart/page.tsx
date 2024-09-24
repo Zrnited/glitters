@@ -5,6 +5,7 @@ import Image, { StaticImageData } from "next/image";
 import cartImg from "@/assets/images/cart-img.png";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
+import LoadingState from "@/components/loader/loader";
 
 export interface cartObject {
   id: number;
@@ -111,7 +112,7 @@ export default function Page() {
         {/* Cart section */}
         <div className="border border-[#2E2729] md:flex md:flex-row">
           {/* cart div */}
-          <div className="p-2 h-auto flex flex-col gap-y-2 md:w-3/4">
+          {cartProducts.length !== 0 && (<div className="p-2 h-auto flex flex-col gap-y-2 md:w-3/4">
             {/* cart-item */}
             {cartProducts?.map((item, index) => {
               return (
@@ -303,7 +304,12 @@ export default function Page() {
             <div className="text-end">
               <h1 className="font-semibold text-xl lg:text-2xl">{`Subtotal: N${sumofPrices.toLocaleString(undefined, {maximumFractionDigits:2})}.00`}</h1>
             </div>
-          </div>
+          </div>)}
+
+          {cartProducts.length === 0 && (<div className="p-2 flex flex-col items-center justify-center gap-y-2 h-screen md:w-3/4">
+              <p className="font-semibold text-lg italic">Your cart is empty</p>
+              <Link className="h-[50px] text-lg bg-[#2E2729] text-white w-[200px] rounded-sm flex items-center justify-center" href={'/'}>Shop now</Link>
+          </div>)}
 
           {/* Order div */}
           <div className="md:border-l border-[#2E2729] md:w-1/2">
@@ -340,8 +346,9 @@ export default function Page() {
                 </button>
               </form>
               {/* Paystack div */}
-              <div className="h-[370px] flex items-center justify-center italic border border-[#2E2729] mt-5">
-                Payment confirmation loading...
+              <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
+                <LoadingState height="50" width="50" />
+                <p>Payment confirmation loading...</p>
               </div>
             </div>
           </div>

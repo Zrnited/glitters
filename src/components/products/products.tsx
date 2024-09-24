@@ -2,6 +2,7 @@ import { StaticImageData } from "next/image";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
+import LoadingState from "../loader/loader";
 // import { Dispatch, SetStateAction } from "react";
 
 export interface cartObjects {
@@ -59,6 +60,7 @@ export function Products({
 }: ProductsProps) {
   const [currentGroup, setCurrentGroup] = useState<string>("");
   const [check, setCheck] = useState<number>(0);
+  const [loadState, setLoadState] = useState<boolean>(true);
 
   function pushProductToCart(productItem: productItem) {
     //find
@@ -100,6 +102,13 @@ export function Products({
     // console.log("Cart Array Set");
   }
 
+  function setLoad (){
+    setInterval(()=>{
+      setLoadState(false);
+    }, 3000)
+  }
+  
+
   useEffect(()=>{
     if(check === 0){
       return;
@@ -109,12 +118,17 @@ export function Products({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check])
 
+  useEffect(()=>{
+    setLoad();
+  }, [])
+
+
   return (
     <section className="pt-10 pb-10 px-5 lg:pt-0 lg:pb-10 xl:px-2">
-      <h1 className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
+      <h1 data-aos="fade-up" className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
         Explore our cutesy products
       </h1>
-      <div className="flex flex-col justify-center w-full">
+      <div data-aos="fade-up" className="flex flex-col justify-center w-full">
         <div className="flex flex-row justify-center gap-5 font-semibold text-lg my-7 border-b border-black lg:max-w-[400px] lg:place-self-center">
           <div className="flex flex-col gap-y-1">
             <p
@@ -165,7 +179,7 @@ export function Products({
       </div>
 
       {/* Products display section */}
-      <article className="grid grid-cols-1 gap-y-5 justify-center place-items-center sm:grid-cols-2 sm:gap-y-8 sm:gap-x-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+      {!loadState && (<article data-aos="fade-up" className="grid grid-cols-1 gap-y-5 justify-center place-items-center sm:grid-cols-2 sm:gap-y-8 sm:gap-x-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
         {productsData?.map((prod, index) => {
           return (
             <div
@@ -227,7 +241,11 @@ export function Products({
             </div>
           );
         })}
-      </article>
+      </article>)}
+      {loadState && (<div className="h-screen p-5 flex gap-y-1 flex-col italic items-center justify-center">
+        <LoadingState height="50" width="50" />
+        <p>Getting products...</p>
+      </div>)}
     </section>
   );
 }

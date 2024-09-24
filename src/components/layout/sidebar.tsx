@@ -1,18 +1,29 @@
 import { Dispatch, SetStateAction } from "react";
+import { deleteCookies } from "@/app/action/actions";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/glittersLogo.png";
 import { AiOutlineClose } from "react-icons/ai";
 import accIcon from "@/assets/icons/account-circle-icon.png";
 import cartIcon from "@/assets/icons/shopping-cart-icon.png";
+import logoutIcon from "@/assets/icons/logout.png";
+import { toast } from "react-toastify";
 
 export interface AsideProps {
   aside: boolean;
   setAside: Dispatch<SetStateAction<boolean>>;
+  logout(): void;
   cartItems: object[] | undefined;
+  isLoggedin: boolean;
 }
 
-export default function Sidebar({ aside, cartItems, setAside }: AsideProps) {
+export default function Sidebar({
+  aside,
+  cartItems,
+  isLoggedin,
+  logout,
+  setAside,
+}: AsideProps) {
   return (
     <>
       {aside === true && (
@@ -86,7 +97,7 @@ export default function Sidebar({ aside, cartItems, setAside }: AsideProps) {
                   {cartItems ? `${cartItems.length}` : `0`}
                 </p>
               </div>
-              <div className="flex flex-row gap-x-2 items-center cursor-pointer p-2">
+              {!isLoggedin && (<div className="flex flex-row gap-x-2 items-center cursor-pointer p-2">
                 <Image
                   src={accIcon}
                   priority
@@ -96,7 +107,20 @@ export default function Sidebar({ aside, cartItems, setAside }: AsideProps) {
                 <Link href={"/signin"} className="text-lg font-semibold">
                   Login
                 </Link>
-              </div>
+              </div>)}
+              {isLoggedin && (<div onClick={()=>{
+                deleteCookies();
+                logout();
+                toast.success("Logged out successfully");
+              }} className="flex flex-row items-center gap-x-2 p-2 cursor-pointer">
+                <Image
+                  src={logoutIcon}
+                  alt="icon"
+                  priority
+                  className="h-[25px] w-auto"
+                />
+                <p className="text-lg font-semibold text-red-500">Logout</p>
+              </div>)}
             </div>
           </div>
         </div>

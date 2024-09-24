@@ -8,10 +8,17 @@ export interface CookieData {
     secure?: boolean;
 }
 
+//checking if a cookie exists
+async function checkForCookie(){
+    const cookieStore = cookies();
+    const hasCookies = cookieStore.has('glittersUserToken');
+    return hasCookies
+}
+
 
 //deleting a cookie
-async function deleteCookies(name: string) {
-    cookies().delete(name);
+async function deleteCookies() {
+    cookies().delete('glittersUserToken');
 }
 
 
@@ -28,4 +35,4 @@ async function setCookie({name, value, path}: CookieData) {
     })
 }
 
-export { setCookie, deleteCookies }
+export { setCookie, deleteCookies, checkForCookie }

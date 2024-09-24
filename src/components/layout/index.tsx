@@ -1,13 +1,14 @@
 "use client";
-import { use, useEffect, useState } from "react";
-// import { useState } from "react";
+import { useEffect, useState } from "react";
+import Aos from 'aos';
+import 'aos/dist/aos.css';
 import Footer from "./footer";
 import Navbar from "./navbar";
 import { usePathname } from "next/navigation";
 import Sidebar from "./sidebar";
 import { ToastContainer } from 'react-toastify';
+import { checkForCookie } from "@/app/action/actions";
 import 'react-toastify/dist/ReactToastify.css';
-// import Sidebar from "./sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
@@ -52,6 +53,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function logout (){
+    setLogoutBar(false);
+    setIsLoggedin(false);
+  }
+
   function getCartArr() {
     const cartItems = sessionStorage.getItem("cartItems");
     if (!cartItems) {
@@ -70,6 +76,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(()=>{
+    Aos.init({
+      duration: 800,
+      once: false
+    })
+  })
+
+  //check if a token exists from the sessionStorage
+  async function checkToken() {
+    const tokenstatus = checkForCookie();
+    if(await tokenstatus){
+      setIsLoggedin(true);
+    } else {
+      return;
+    }
+  }
+
+  useEffect(()=>{
+    checkToken();
+  }, [])
+
   return (
     <div className="flex justify-center">
       <ToastContainer />
@@ -82,8 +109,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           showSearchbar={showSearchbar}
           logoutBar={logoutBar}
           showLogoutBar={showLogoutBar}
+          logout={logout}
         />
-        <Sidebar cartItems={cartItems} aside={aside} setAside={setAside} />
+        <Sidebar isLoggedin={isLoggedin} logout={logout} cartItems={cartItems} aside={aside} setAside={setAside} />
         <main>{children}</main>
         {checkPath() && <Footer />}
       </div>
