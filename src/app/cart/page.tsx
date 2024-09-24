@@ -2,7 +2,7 @@
 import Layout from "@/components/layout";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
-import cartImg from "@/assets/images/cart-img.png";
+// import cartImg from "@/assets/images/cart-img.png";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import LoadingState from "@/components/loader/loader";
@@ -341,14 +341,14 @@ export default function Page() {
                     className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
                   />
                 </div>
-                <button className="w-[188px] h-[55px] text-lg bg-[#2E2729] text-white mt-2">
+                <button disabled={cartProducts.length === 0} className="w-[188px] h-[55px] text-lg bg-[#2E2729] text-white mt-2">
                   Complete Payment
                 </button>
               </form>
               {/* Paystack div */}
               <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
-                <LoadingState height="50" width="50" />
-                <p>Payment confirmation loading...</p>
+                {/* <LoadingState height="50" width="50" /> */}
+                <p>Payment confirmation will appear here once processed.</p>
               </div>
             </div>
           </div>

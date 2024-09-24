@@ -92,7 +92,7 @@ export default function Navbar({
                   className="w-[25px] h-auto cursor-pointer md:w-[30px]"
                 />
               </Link>
-              {cartItems && (<p className="bg-red-500 w-[20px] h-[20px] text-center text-white rounded-full absolute -right-2 -top-1 text-xs place-content-center">{`${cartItems?.length}`}</p>)}
+              {cartItems && (<p className="bg-red-600 w-[20px] h-[20px] text-center text-white rounded-full absolute -right-2 -top-1 text-xs place-content-center">{`${cartItems?.length}`}</p>)}
             </div>
             <div className="relative">
               {!isLoggedin && (<Link href={"/signin"}>

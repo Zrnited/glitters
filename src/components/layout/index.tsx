@@ -74,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     getCartArr();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  },[]);
 
   useEffect(()=>{
     Aos.init({

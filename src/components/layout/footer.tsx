@@ -63,7 +63,7 @@ export default function Footer() {
             <Link href={"/"}>Store</Link>
           </li>
           <li>
-            <Link href={"/"}>Cart</Link>
+            <Link href={"/cart"}>Cart</Link>
           </li>
           <li>
             <Link href={"/"}>About us</Link>

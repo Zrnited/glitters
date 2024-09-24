@@ -133,7 +133,9 @@ export default function Home() {
               We serve and offer delivery nationwide. You order world class and
               we deliver world class.
             </p>
-            <button data-aos="fade-up" className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg">
+            <button onClick={(()=>{
+              window.scrollTo(0, 1400);
+            })} data-aos="fade-up" className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg">
               Show Now
             </button>
           </div>

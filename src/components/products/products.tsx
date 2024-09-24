@@ -107,7 +107,6 @@ export function Products({
       setLoadState(false);
     }, 3000)
   }
-  
 
   useEffect(()=>{
     if(check === 0){
@@ -121,7 +120,6 @@ export function Products({
   useEffect(()=>{
     setLoad();
   }, [])
-
 
   return (
     <section className="pt-10 pb-10 px-5 lg:pt-0 lg:pb-10 xl:px-2">
@@ -151,6 +149,7 @@ export function Products({
                 // console.log(e.target.innerHTML);
                 const group = e.target.innerHTML;
                 setCurrentGroup(group);
+                toast.warn("Beadwares currently not available")
               }}
               className="cursor-pointer"
             >
@@ -166,6 +165,7 @@ export function Products({
                 // console.log(e.target.innerHTML);
                 const group = e.target.innerHTML;
                 setCurrentGroup(group);
+                toast.warn("Partners Products are currently not available")
               }}
               className="cursor-pointer"
             >
