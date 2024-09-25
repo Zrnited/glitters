@@ -9,7 +9,7 @@ import 'aos/dist/aos.css';
 import Image from "next/image";
 import Layout from "@/components/layout";
 import NextVideo from "next-video";
-import productVideo from "../../videos/product.mp4";
+import productVideo from "../../videos/product-video.mp4";
 import heroimage2 from "@/assets/images/heroImg-2.png";
 import heroimage3 from "@/assets/images/heroImg-3.png";
 import fastDelivery from "@/assets/icons/fastdelivery.png";
@@ -86,7 +86,6 @@ export default function Home() {
                 className="object-fill bg-cover h-full w-full"
                 accentColor="#CF8292"
                 src={productVideo}
-                // playbackId="zjrRzADAASQh00XbS00zcE6vwVnirRdbVWi017yP2l02iuw"
               />
             </div>
             <Image
