@@ -35,6 +35,7 @@ export interface ProductsProps {
   setProductId(e: number): void;
   setCartArray: Dispatch<SetStateAction<object[]>>;
   cartArray: cartObjects[];
+  setCartToSessionStorage(cartItems: object[]): void
   // setGetProductId: Dispatch<SetStateAction<number | undefined>>
 }
 
@@ -57,6 +58,7 @@ export function Products({
   setProductId,
   setCartArray,
   cartArray,
+  setCartToSessionStorage
 }: ProductsProps) {
   const [currentGroup, setCurrentGroup] = useState<string>("");
   const [check, setCheck] = useState<number>(0);
@@ -91,17 +93,9 @@ export function Products({
       });
       toast.success("Item added to cart successfully");
     }
-    // console.log(productItem);
-    // setCartToSessionStorage(cartArray);
     setCheck(check + 1);
   }
-
-  function setCartToSessionStorage (cartItems: object[]){
-    // const defaultCartArr: object[] = [];
-    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-    // console.log("Cart Array Set");
-  }
-
+  
   function setLoad (){
     setInterval(()=>{
       setLoadState(false);

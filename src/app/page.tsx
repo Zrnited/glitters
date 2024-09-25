@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import Image from "next/image";
@@ -41,26 +42,9 @@ export default function Home() {
     },
   ];
 
-  // const [currentGroup, setCurrentGroup] = useState<string>("");
+  const { cart, setCart, setCartToSessionStorage } = useAppContext();
   const router = useRouter();
   const [getProductId, setGetProductId] = useState<number>();
-  const [cartArray, setCartArray] = useState<Array<object>>([]);
-  // console.log(cartArray);
-
-  //get and set cart array
-  function getAndSetCartArr (){
-    const getArray = sessionStorage.getItem("cartItems");
-    if(getArray){
-      const cartArray: object[] = JSON.parse(getArray);
-      setCartArray(cartArray);
-      console.log("Cart Parsed from Session Storage");
-    } else {
-      const defaultCartArr: object[] = [];
-      sessionStorage.setItem('cartItems', JSON.stringify(defaultCartArr));
-      setCartArray(defaultCartArr);
-      console.log("Cart Array Set to empty");
-    }
-  }
 
   function setProductId (e: number){
     console.log(e);
@@ -75,10 +59,6 @@ export default function Home() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProductId])
-
-  useEffect(()=>{
-    getAndSetCartArr();
-  }, [])
 
   useEffect(()=>{
     Aos.init({
@@ -169,7 +149,7 @@ export default function Home() {
           })}
         </div>
       </section>
-      <Products cartArray={cartArray} setCartArray={setCartArray} productsData={products} setProductId={setProductId}/>
+      <Products setCartToSessionStorage={setCartToSessionStorage} cartArray={cart} setCartArray={setCart} productsData={products} setProductId={setProductId}/>
     </Layout>
   );
 }

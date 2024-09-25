@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-// import { Mada } from "next/font/google";
 import "./globals.css";
-
-// const mada = Mada({ subsets: ["latin"] });
+import { AppWrapper } from "@/context";
 
 export const metadata: Metadata = {
   title: "Glitters || Shop for free",
@@ -17,8 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <body className={mada.className}>{children}</body> */}
-      <body>{children}</body>
+      <body>
+        <AppWrapper>
+          {children}
+        </AppWrapper>
+      </body>
     </html>
   );
 }

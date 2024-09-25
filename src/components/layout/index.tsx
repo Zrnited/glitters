@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useAppContext } from "@/context";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import Footer from "./footer";
@@ -16,7 +17,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [logoutBar, setLogoutBar] = useState<boolean>(false);
   const [aside, setAside] = useState<boolean>(false);
   const [isLoggedin, setIsLoggedin] = useState<boolean>(false);
-  const [cartItems, setCartItems] = useState<Array<object>>();
+
+  const { cart } = useAppContext();
 
   function checkPath() {
     if (path === "/signup") {
@@ -58,24 +60,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     setIsLoggedin(false);
   }
 
-  function getCartArr() {
-    const cartItems = sessionStorage.getItem("cartItems");
-    if (!cartItems) {
-      // console.log("Cannot find cart in session storage");
-      return;
-    } else {
-      const exisCartArr: object[] = JSON.parse(cartItems);
-      // console.log(exisCartArr);
-      setCartItems(exisCartArr);
-      // console.log("existing cart array gotten and set to cartArr");
-    }
-  }
-
-  useEffect(() => {
-    getCartArr();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
-
   useEffect(()=>{
     Aos.init({
       duration: 800,
@@ -102,7 +86,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <ToastContainer />
       <div className="container">
         <Navbar
-          cartItems={cartItems}
+          cartItems={cart}
           setAside={setAside}
           isLoggedin={isLoggedin}
           searchbar={searchbar}
@@ -111,7 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           showLogoutBar={showLogoutBar}
           logout={logout}
         />
-        <Sidebar isLoggedin={isLoggedin} logout={logout} cartItems={cartItems} aside={aside} setAside={setAside} />
+        <Sidebar isLoggedin={isLoggedin} logout={logout} cartItems={cart} aside={aside} setAside={setAside} />
         <main>{children}</main>
         {checkPath() && <Footer />}
       </div>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/context";
 import Layout from "@/components/layout";
 import Loading from "@/components/loading/loading";
 import Link from "next/link";
@@ -55,12 +56,11 @@ export interface cartObjects {
 }
 
 export default function Page() {
+  const { cart, setCart, setCartToSessionStorage } = useAppContext();
 
   const [getProductId, setGetProductId] = useState<number>();
   const [prod, setProd] = useState<Products>();
   const [count, setCount] = useState<number>(0);
-  const [cartArr, setCartArr] = useState<Array<cartObjects>>([]);
-  // console.log(cartArr);
 
   const [newObj, setNewObj] = useState<newObject>({
     id: 0,
@@ -76,25 +76,6 @@ export default function Page() {
     quantity: count
   });
   const router = useRouter();
-
-  function getCartArr (){
-    const cartItems = sessionStorage.getItem("cartItems");
-    if(!cartItems){
-      console.log("Cannot find cart in session storage");
-      return;
-    } else {
-      const exisCartArr: object[] = JSON.parse(cartItems);
-      // console.log(exisCartArr);
-      setCartArr(exisCartArr);
-      // console.log("existing cart array gotten and set to cartArr");
-    }
-  }
-
-  function setCartToSessionStorage (cartItems: object[]){
-    // const defaultCartArr: object[] = [];
-    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-    // console.log("Cart Array Set");
-  }
 
   function getProduct() {
     //first we get the session data
@@ -148,7 +129,7 @@ export default function Page() {
     //find from existing cartArr if a selected product is already there.
     
     //find
-    const item = cartArr?.find(item => item?.id === id);
+    const item = cart?.find(item => item?.id === id);
 
     //if found, edit the properties
     if(item){
@@ -167,7 +148,7 @@ export default function Page() {
       if(result){
         console.log("Existing object has been updated")
       } else {
-        setCartArr((prevState)=>{
+        setCart((prevState)=>{
           return [
             ...prevState,
             newObj
@@ -184,7 +165,6 @@ export default function Page() {
 
   useEffect(() => {
     getProduct();
-    getCartArr();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProductId]);
 
@@ -198,13 +178,14 @@ export default function Page() {
   }, [getProductId]);
 
   useEffect(()=>{
-    if(cartArr.length !== 0 && count !== 0){
+    if(cart.length !== 0 && count !== 0){
       // console.log(cartArr);
-      setCartToSessionStorage(cartArr);
+      setCartToSessionStorage(cart);
     } else {
       return;
     }
-  }, [cartArr, count])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cart, count])
 
   return (
     <Layout>
@@ -318,7 +299,7 @@ export default function Page() {
         </section>
       )}
       {!prod && <Loading />}
-      <Products cartArray={cartArr} setCartArray={setCartArr} productsData={products} setProductId={setProductId} />
+      <Products setCartToSessionStorage={setCartToSessionStorage} cartArray={cart} setCartArray={setCart} productsData={products} setProductId={setProductId} />
     </Layout>
   );
 }
