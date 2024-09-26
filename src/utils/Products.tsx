@@ -17,7 +17,7 @@ const products = [
         price: 45000,
         status: "Available",   
         category: "Bags",
-        color: "white"
+        color: "White"
     },
     {
         id: 2,
@@ -29,7 +29,7 @@ const products = [
         price: 50000,
         status: "Available",   
         category: "Bags",
-        color: "pink"
+        color: "Pink"
     },
     {
         id: 3,
@@ -53,7 +53,7 @@ const products = [
         price: 35000,
         status: "Available",   
         category: "Bags",
-        color: "black"
+        color: "Black"
     },
     {
         id: 5,
@@ -65,7 +65,7 @@ const products = [
         price: 60000,
         status: "Available",   
         category: "Bags",
-        color: "black"
+        color: "Black"
     },
     {
         id: 6,
@@ -77,7 +77,7 @@ const products = [
         price: 50000,
         status: "Available",   
         category: "Bags",
-        color: "black"
+        color: "Black"
     },
 ]
 

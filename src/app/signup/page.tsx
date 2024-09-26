@@ -4,7 +4,7 @@ import Layout from "@/components/layout";
 import Link from "next/link";
 import { useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 export interface userData {

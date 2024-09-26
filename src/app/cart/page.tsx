@@ -2,10 +2,13 @@
 import Layout from "@/components/layout";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
+import { z } from "zod";
 // import cartImg from "@/assets/images/cart-img.png";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import LoadingState from "@/components/loader/loader";
+import InitiatePayment from "@/payment/InitiatePayment";
+// import { payForGoods } from "../action/initiatePayment";
+// import LoadingState from "@/components/loader/loader";
 
 export interface cartObject {
   id: number;
@@ -21,12 +24,55 @@ export interface cartObject {
   quantity: number;
 }
 
+interface PaymentDetails {
+  amount: number;
+  phoneNumber: string;
+  address: string;
+  comment: string;
+}
+
+interface User {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
+interface FieldErrors {
+  address?: Array<string>;
+  number?: Array<string>;
+  comment?: Array<string>;
+}
+
+const paymentSchema = z.object({
+  address: z
+    .string()
+    .min(2, { message: "Address info empty or too short" })
+    .max(500, { message: "Address info too long" }),
+  number: z.string().min(11, {message: "Eleven digits required"}).max(11, {message: "Eleven digits required"}),
+  comments: z.string().min(1, { message: "Comment empty or too short" }),
+});
+
 export default function Page() {
   const [cartProducts, setCartProducts] = useState<Array<cartObject>>([]);
   // console.log(cartProducts);
   const [qtyCount, setQtyCount] = useState<number>(0);
   // console.log(qtyCount);
   const [currprodid, setCurrProdId] = useState<number>();
+  const [pay, setPay] = useState<boolean>(false);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
+    amount: 0,
+    phoneNumber: "",
+    address: "",
+    comment: "",
+  });
+  // console.log(paymentDetails);
+  const [paymentErr, setPaymentErr] = useState<FieldErrors>();
+  // console.log(paymentErr);
+  const [currUser, setCurrUser] = useState<User>({
+    fullName: "",
+    email: "",
+    password: "",
+  });
 
   const itemsPrice: number[] = cartProducts.map(
     (item) => item.price * item.quantity
@@ -91,8 +137,74 @@ export default function Page() {
     return item;
   }
 
+  function getUser() {
+    const user = sessionStorage.getItem("userDetails");
+    if (user) {
+      const userDetails = JSON.parse(user);
+      setCurrUser(userDetails);
+      console.log("user gotten and parsed");
+    } else {
+      console.log("No existing user found");
+      return;
+    }
+  }
+
+  function handleChange(e: any) {
+    if (e.target) {
+      setPaymentDetails({
+        ...paymentDetails,
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      return;
+    }
+  }
+
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    const validatedFields = paymentSchema.safeParse({
+      address: paymentDetails.address,
+      number: paymentDetails.phoneNumber,
+      comments: paymentDetails.comment,
+    });
+    const hasErrors = validatedFields.error?.flatten().fieldErrors;
+    if (hasErrors) setPaymentErr(hasErrors);
+    console.log(hasErrors);
+    if (!validatedFields.success) {
+      //do something
+      console.log("Errors in fields. Check Payment Error");
+    } else {
+      setPaymentErr({});
+      if (
+        sumofPrices !== 0 &&
+        currUser.fullName !== "" &&
+        currUser.email !== ""
+      ) {
+        setPaymentDetails((prev) => {
+          return {
+            ...prev,
+            amount: sumofPrices,
+          };
+        });
+        const allFields = {
+          email: currUser.email,
+          amount: sumofPrices,
+          firstname: currUser.fullName,
+          phone: paymentDetails.phoneNumber,
+          address: paymentDetails.address,
+        };
+        console.log(allFields);
+        // payForGoods(currUser.email, sumofPrices.toString())
+        setPay(true);
+      } else {
+        console.log("Either price or user is missing!");
+      }
+    }
+  }
+
   useEffect(() => {
     getCartArr();
+    getUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -112,78 +224,90 @@ export default function Page() {
         {/* Cart section */}
         <div className="border border-[#2E2729] md:flex md:flex-row">
           {/* cart div */}
-          {cartProducts.length !== 0 && (<div className="p-2 h-auto flex flex-col gap-y-2 md:w-3/4">
-            {/* cart-item */}
-            {cartProducts?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto"
-                >
-                  <Image
-                    alt="cart-img"
-                    priority
-                    src={item.coverImg}
-                    className="w-[112px] h-[112px] lg:w-[80px] lg:h-[80px]"
-                  />
-                  <div className="lg:flex lg:flex-row lg:gap-x-5 lg:items-center">
-                    <div>
-                      <h1 className="font-medium text-xl lg:text-2xl">
-                        {item.name}
-                      </h1>
-                      <p className="text-sm lg:text-lg">{item.desc}</p>
-                    </div>
-                    <div className="lg:hidden">
-                      <div className="flex flex-row gap-5 text-sm font-semibold">
-                        <p>{`N${(item.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</p>
-                        <p>{item.color}</p>
+          {cartProducts.length !== 0 && (
+            <div className="p-2 h-auto flex flex-col gap-y-2 md:w-3/4">
+              {/* cart-item */}
+              {cartProducts?.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto"
+                  >
+                    <Image
+                      alt="cart-img"
+                      priority
+                      src={item.coverImg}
+                      className="w-[112px] h-[112px] lg:w-[80px] lg:h-[80px]"
+                    />
+                    <div className="lg:flex lg:flex-row lg:gap-x-5 lg:items-center">
+                      <div>
+                        <h1 className="font-medium text-xl lg:text-2xl">
+                          {item.name}
+                        </h1>
+                        <p className="text-sm lg:text-lg">{item.desc}</p>
                       </div>
-                      <div className="flex flex-row gap-x-1">
-                        <button
-                          onClick={() => increaseQty(item)}
-                          className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
-                        >
-                          <BsChevronUp color="white" size={20} />
-                        </button>
+                      <div className="lg:hidden">
+                        <div className="flex flex-row gap-5 text-sm font-semibold">
+                          <p>{`N${item.price.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                          })}`}</p>
+                          <p>{item.color}</p>
+                        </div>
+                        <div className="flex flex-row gap-x-1">
+                          <button
+                            onClick={() => increaseQty(item)}
+                            className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                          >
+                            <BsChevronUp color="white" size={20} />
+                          </button>
 
-                        <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
-                          {currprodid !== item.id
-                            ? `${item.quantity}`
-                            : `${qtyCount}`}
-                        </span>
+                          <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
+                            {currprodid !== item.id
+                              ? `${item.quantity}`
+                              : `${qtyCount}`}
+                          </span>
 
-                        <button
-                          onClick={() => decreaseQty(item)}
-                          className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
-                        >
-                          <BsChevronDown color="white" size={20} />
-                        </button>
+                          <button
+                            onClick={() => decreaseQty(item)}
+                            className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                          >
+                            <BsChevronDown color="white" size={20} />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
-                      <p className="text-lg font-semibold">{item.color}</p>
-                      <div className="flex flex-row gap-x-2">
-                        <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
-                          {item.quantity}
-                        </span>
+                      <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
+                        <p className="text-lg font-semibold">{item.color}</p>
+                        <div className="flex flex-row gap-x-2">
+                          <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
+                            {item.quantity}
+                          </span>
 
-                        <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]" onClick={()=>increaseQty(item)}>
-                          <BsChevronUp color="white" size={20} />
-                        </button>
+                          <button
+                            className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                            onClick={() => increaseQty(item)}
+                          >
+                            <BsChevronUp color="white" size={20} />
+                          </button>
 
-                        <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]" onClick={()=>decreaseQty(item)}>
-                          <BsChevronDown color="white" size={20} />
-                        </button>
+                          <button
+                            className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]"
+                            onClick={() => decreaseQty(item)}
+                          >
+                            <BsChevronDown color="white" size={20} />
+                          </button>
+                        </div>
+                        <p className="text-lg font-semibold">{`N${item.price.toLocaleString(
+                          undefined,
+                          { maximumFractionDigits: 2 }
+                        )}`}</p>
                       </div>
-                      <p className="text-lg font-semibold">{`N${(item.price).toLocaleString(undefined, {maximumFractionDigits:2})}`}</p>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
 
-            {/* Revert back if any issue */}
-            {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
+              {/* Revert back if any issue */}
+              {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
               <Image
                 alt="cart-img"
                 priority
@@ -238,8 +362,8 @@ export default function Page() {
               </div>
             </div> */}
 
-            {/* cart item with color selection */}
-            {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
+              {/* cart item with color selection */}
+              {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
               <Image
                 alt="cart-img"
                 priority
@@ -300,21 +424,32 @@ export default function Page() {
               </div>
             </div> */}
 
-            {/* sub total */}
-            <div className="text-end">
-              <h1 className="font-semibold text-xl lg:text-2xl">{`Subtotal: N${sumofPrices.toLocaleString(undefined, {maximumFractionDigits:2})}.00`}</h1>
+              {/* sub total */}
+              <div className="text-end">
+                <h1 className="font-semibold text-xl lg:text-2xl">{`Subtotal: N${sumofPrices.toLocaleString(
+                  undefined,
+                  { maximumFractionDigits: 2 }
+                )}.00`}</h1>
+              </div>
             </div>
-          </div>)}
+          )}
 
-          {cartProducts.length === 0 && (<div className="p-2 flex flex-col items-center justify-center gap-y-2 h-screen md:w-3/4">
+          {cartProducts.length === 0 && (
+            <div className="p-2 flex flex-col items-center justify-center gap-y-2 h-screen md:w-3/4">
               <p className="font-semibold text-lg italic">Your cart is empty</p>
-              <Link className="h-[50px] text-lg bg-[#2E2729] text-white w-[200px] rounded-sm flex items-center justify-center" href={'/'}>Shop now</Link>
-          </div>)}
+              <Link
+                className="h-[50px] text-lg bg-[#2E2729] text-white w-[200px] rounded-sm flex items-center justify-center"
+                href={"/"}
+              >
+                Shop now
+              </Link>
+            </div>
+          )}
 
           {/* Order div */}
           <div className="md:border-l border-[#2E2729] md:w-1/2">
             <div className="md:w-full p-3">
-              <form className="flex flex-col gap-y-3">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
                 <h2 className="text-2xl font-medium">Complete Order</h2>
                 <div className="flex flex-col gap-y-2">
                   <div className="flex flex-col gap-y-1">
@@ -322,6 +457,8 @@ export default function Page() {
                     <input
                       type="text"
                       className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
+                      onChange={handleChange}
+                      name="address"
                     />
                   </div>
                   <div className="flex flex-col gap-y-1">
@@ -331,19 +468,40 @@ export default function Page() {
                     <input
                       type="text"
                       className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
+                      onChange={handleChange}
+                      name="phoneNumber"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-y-1">
+                    <label className="font-semibold">Other comments</label>
+                    <input
+                      type="text"
+                      className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
+                      onChange={handleChange}
+                      name="comment"
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-y-1">
-                  <label className="font-semibold">Other comments</label>
-                  <input
-                    type="text"
-                    className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
+                {!pay && (
+                  <button
+                    disabled={cartProducts.length === 0}
+                    className="w-[188px] h-[55px] text-lg bg-[#2E2729] text-white mt-2"
+                  >
+                    Pay
+                  </button>
+                )}
+                {pay && (
+                  <InitiatePayment
+                    name={currUser.fullName}
+                    amount={paymentDetails.amount}
+                    address={paymentDetails.address}
+                    phoneNumber={paymentDetails.phoneNumber}
+                    cartProducts={cartProducts}
+                    email={currUser.email}
+                    classname="w-[188px] h-[55px] text-lg bg-green-600 rounded text-white mt-2"
+                    text="Complete Payment"
                   />
-                </div>
-                <button disabled={cartProducts.length === 0} className="w-[188px] h-[55px] text-lg bg-[#2E2729] text-white mt-2">
-                  Complete Payment
-                </button>
+                )}
               </form>
               {/* Paystack div */}
               <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
