@@ -3,12 +3,9 @@ import Layout from "@/components/layout";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import { z } from "zod";
-// import cartImg from "@/assets/images/cart-img.png";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import InitiatePayment from "@/payment/InitiatePayment";
-// import { payForGoods } from "../action/initiatePayment";
-// import LoadingState from "@/components/loader/loader";
 
 export interface cartObject {
   id: number;

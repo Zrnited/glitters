@@ -129,7 +129,7 @@ export default function Home() {
             return (
               <div
                 key={index}
-                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer z-10 lg:max-w-[280px] lg:gap-y-4 lg:p-3 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
+                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer z-10 lg:max-w-[280px] lg:gap-y-4 md:p-3 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
               >
                 <div className="h-[100px] w-[100px] bg-[#F1DADF] rounded-md flex items-center justify-center">
                   <Image

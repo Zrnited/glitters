@@ -226,7 +226,7 @@ export function Products({
                   </button>
                   <button
                     onClick={() => pushProductToCart(prod)}
-                    className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px]"
+                    className="h-[25px] bg-white text-[#2E2729] border-[#2E2729] border text-sm text-center px-2 font-semibold sm:h-[35px] sm:w-[115px] md:text-lg md:h-[55px] md:w-[188px] hover:bg-[#00A460] hover:text-white hover:border-none transition ease-in-out delay-100"
                   >
                     Add to Cart +
                   </button>
