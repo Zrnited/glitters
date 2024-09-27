@@ -5,7 +5,7 @@ import Image, { StaticImageData } from "next/image";
 import { z } from "zod";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import InitiatePayment from "@/payment/InitiatePayment";
+// import InitiatePayment from "@/payment/InitiatePayment";
 
 export interface cartObject {
   id: number;
@@ -487,7 +487,7 @@ export default function Page() {
                     Pay
                   </button>
                 )}
-                {pay && (
+                {/* {pay && (
                   <InitiatePayment
                     name={currUser.fullName}
                     amount={paymentDetails.amount}
@@ -498,7 +498,7 @@ export default function Page() {
                     classname="w-[188px] h-[55px] text-lg bg-green-600 rounded text-white mt-2"
                     text="Complete Payment"
                   />
-                )}
+                )} */}
               </form>
               {/* Paystack div */}
               <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
