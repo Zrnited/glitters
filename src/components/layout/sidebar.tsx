@@ -63,8 +63,8 @@ export default function Sidebar({
               </Link>
             </li>
             <li className="p-2 rounded-sm hover:bg-[#E8C3CB] transition ease-in-out delay-100">
-              <Link className="font-medium" href={"/"}>
-                Partners
+              <Link className="font-medium" href={"/orders"}>
+                Orders
               </Link>
             </li>
           </ul>

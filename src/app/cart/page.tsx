@@ -2,10 +2,14 @@
 import Layout from "@/components/layout";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
+import check from "@/assets/icons/check.png";
 import { z } from "zod";
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 import { BsChevronUp, BsChevronDown } from "react-icons/bs";
 import { useEffect, useState } from "react";
+import { useAppContext } from "@/context";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 // import InitiatePayment from "@/payment/InitiatePayment";
 
 export interface cartObject {
@@ -41,19 +45,36 @@ interface FieldErrors {
   comment?: Array<string>;
 }
 
+interface Response {
+  message: string;
+  redirecturl: string;
+  reference:string;
+  status:string;
+  trans:string;
+  transaction:string;
+  trxref:string;
+}
+
 const paymentSchema = z.object({
   address: z
     .string()
     .min(2, { message: "Address info empty or too short" })
-    .max(500, { message: "Address info too long" }),
-  number: z.string().min(11, {message: "Eleven digits required"}).max(11, {message: "Eleven digits required"}),
-  comments: z.string().min(1, { message: "Comment empty or too short" }),
+    .max(500, { message: "Address info too long" })
+    .refine((value) => /^[A-Za-z0-9\s,\.]+$/.test(value.trim() ?? ""), {
+      message: "Invalid character",
+    }),
+  number: z
+    .string()
+    .min(11, { message: "Eleven digits required at least" })
+    .refine((value) => /^[0-9]+$/.test(value ?? ""), {
+      message: "Invalid entries",
+    }),
+  comments: z.string().optional(),
 });
 
-const InitiatePayment = dynamic(
-  () => import('@/payment/InitiatePayment'),
-  { ssr: false }
-)
+const InitiatePayment = dynamic(() => import("@/payment/InitiatePayment"), {
+  ssr: false,
+});
 
 export default function Page() {
   const [cartProducts, setCartProducts] = useState<Array<cartObject>>([]);
@@ -76,6 +97,12 @@ export default function Page() {
     email: "",
     password: "",
   });
+  const [paySuccess, setPaySuccess] = useState<Response>();
+  const [payFailed, setPayFailed] = useState<boolean>(false);
+
+  //everything orders
+  const { getOrderArr, setOrders, setOrderToSessionStorage, setCartToSessionStorage, setCart } = useAppContext();
+  const router = useRouter();
 
   const itemsPrice: number[] = cartProducts.map(
     (item) => item.price * item.quantity
@@ -153,6 +180,14 @@ export default function Page() {
   }
 
   function handleChange(e: any) {
+    // const validatedFields = paymentSchema.safeParse({
+    //   address: paymentDetails.address,
+    //   number: paymentDetails.phoneNumber,
+    //   comments: paymentDetails.comment,
+    // });
+    // const hasErrors = validatedFields.error?.flatten().fieldErrors;
+    // if (hasErrors) setPaymentErr(hasErrors);
+    // console.log(hasErrors);
     if (e.target) {
       setPaymentDetails({
         ...paymentDetails,
@@ -170,14 +205,11 @@ export default function Page() {
       number: paymentDetails.phoneNumber,
       comments: paymentDetails.comment,
     });
-    const hasErrors = validatedFields.error?.flatten().fieldErrors;
-    if (hasErrors) setPaymentErr(hasErrors);
-    console.log(hasErrors);
     if (!validatedFields.success) {
       //do something
+      setPay(false);
       console.log("Errors in fields. Check Payment Error");
     } else {
-      setPaymentErr({});
       if (
         sumofPrices !== 0 &&
         currUser.fullName !== "" &&
@@ -197,9 +229,9 @@ export default function Page() {
           address: paymentDetails.address,
         };
         console.log(allFields);
-        // payForGoods(currUser.email, sumofPrices.toString())
         setPay(true);
       } else {
+        toast.warn("KIndly sign up again");
         console.log("Either price or user is missing!");
       }
     }
@@ -208,8 +240,48 @@ export default function Page() {
   useEffect(() => {
     getCartArr();
     getUser();
+    getOrderArr();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const validatedFields = paymentSchema.safeParse({
+      address: paymentDetails.address,
+      number: paymentDetails.phoneNumber,
+      comments: paymentDetails.comment,
+    });
+    const hasErrors = validatedFields.error?.flatten().fieldErrors;
+
+    // console.log(hasErrors);
+    // console.log(validatedFields.success);
+
+    if(!validatedFields.success){
+      setPaymentErr(hasErrors)
+    } else {
+      setPaymentErr(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentDetails]);
+  
+  useEffect(()=>{
+    console.log(paySuccess)
+    console.log(typeof(paySuccess))
+    if(paySuccess === undefined){
+      return;
+    } else {
+      if(paySuccess.status === "success"){
+        const emptyCart: object[] = [];
+        setOrders(cartProducts);
+        setCart(emptyCart);
+        setCartToSessionStorage(emptyCart);
+        setOrderToSessionStorage(cartProducts);
+        router.push("/orders");
+      } else {
+        return;
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paySuccess])
 
   return (
     <Layout>
@@ -454,63 +526,82 @@ export default function Page() {
             <div className="md:w-full p-3">
               <form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
                 <h2 className="text-2xl font-medium">Complete Order</h2>
-                <div className="flex flex-col gap-y-2">
+                <div className="flex flex-col gap-2 lg:flex-row">
                   <div className="flex flex-col gap-y-1">
-                    <label className="font-semibold">Delivery Address</label>
+                    <label className="font-semibold">Delivery Address*</label>
                     <input
                       type="text"
                       className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
                       onChange={handleChange}
                       name="address"
+                      placeholder="e.g. 2, Main Street, Agege, Lagos."
                     />
+                    {/* <p className="text-sm text-red-600">Required*</p> */}
                   </div>
                   <div className="flex flex-col gap-y-1">
                     <label className="font-semibold">
-                      WhatsApp/Contact Number
+                      WhatsApp/Contact Number*
                     </label>
                     <input
                       type="text"
                       className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
                       onChange={handleChange}
                       name="phoneNumber"
+                      placeholder="e.g. 0902..."
                     />
-                  </div>
-                  <div className="flex flex-col gap-y-1">
-                    <label className="font-semibold">Other comments</label>
-                    <input
-                      type="text"
-                      className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
-                      onChange={handleChange}
-                      name="comment"
-                    />
+                    {/* <p className="text-sm text-red-600">Required*</p> */}
                   </div>
                 </div>
-                {!pay && (
-                  <button
-                    disabled={cartProducts.length === 0}
-                    className="w-[188px] h-[55px] text-lg bg-[#2E2729] text-white mt-2"
-                  >
-                    Pay
-                  </button>
-                )}
-                {pay && (
-                  <InitiatePayment
-                    name={currUser.fullName}
-                    amount={paymentDetails.amount}
-                    address={paymentDetails.address}
-                    phoneNumber={paymentDetails.phoneNumber}
-                    cartProducts={cartProducts}
-                    email={currUser.email}
-                    classname="w-[188px] h-[55px] text-lg bg-green-600 rounded text-white mt-2"
-                    text="Complete Payment"
+                <div className="flex flex-col gap-y-1">
+                  <label className="font-semibold">
+                    Other comments (If any)
+                  </label>
+                  <input
+                    type="text"
+                    className="h-[60px] border border-[#2E2729] px-5 focus:outline-none"
+                    onChange={handleChange}
+                    name="comment"
                   />
-                )}
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  {!pay && (
+                    <button
+                      disabled={paymentErr !== undefined}
+                      className="w-[188px] h-[50px] text-base bg-[#2E2729] text-white mt-2"
+                    >
+                      Register Order Info
+                    </button>
+                  )}
+                  {pay && (
+                    <InitiatePayment
+                      name={currUser.fullName}
+                      amount={paymentDetails.amount}
+                      address={paymentDetails.address}
+                      phoneNumber={paymentDetails.phoneNumber}
+                      cartProducts={cartProducts}
+                      email={currUser.email}
+                      classname="w-[188px] h-[50px] text-lg bg-[#00A460] rounded text-white mt-2"
+                      text="Proceed to payment"
+                      disabled={paymentErr !== undefined}
+                      setPaySuccess={setPaySuccess}
+                      setPayFailed={setPayFailed}
+                    />
+                  )}
+                  {pay && (<span className="flex flex-row gap-x-1 items-center">
+                    <p className="text-[#00A460] text-sm sm:text-base">Details gotten </p>
+                    <Image src={check} alt="icon" priority className="w-[20px] h-[20px]" />
+                  </span>)}
+                </div>
               </form>
               {/* Paystack div */}
               <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
                 {/* <LoadingState height="50" width="50" /> */}
-                <p>Payment confirmation will appear here once processed.</p>
+                {!payFailed && (<p>Payment confirmation will appear here once processed.</p>)}
+                {payFailed && (<p className="text-red-600 text-lg">Transaction Failed! Try again.</p>)}
               </div>
+              <p className="font-semibold text-center mt-3">
+                Payment Powered by Paystack
+              </p>
             </div>
           </div>
         </div>

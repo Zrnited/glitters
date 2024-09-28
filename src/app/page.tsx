@@ -69,7 +69,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <section className="p-5 sm:pt-28 lg:flex lg:flex-col lg:justify-center">
+      <section className="p-5 pt-28 lg:flex lg:flex-col lg:justify-center">
         <div className="bg-[#E8C3CB] border border-black rounded-xl py-1 px-4 text-center lg:place-self-center lg:px-3 lg:max-w-[629px]">
           <p className="text-sm">
             We&apos;re giving 20% discount for our first 1,000 orders. Use Code{" "}
@@ -129,7 +129,7 @@ export default function Home() {
             return (
               <div
                 key={index}
-                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer z-10 lg:max-w-[280px] lg:gap-y-4 md:p-3 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
+                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer z-10 p-2 md:p-3 lg:max-w-[280px] lg:gap-y-4 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
               >
                 <div className="h-[100px] w-[100px] bg-[#F1DADF] rounded-md flex items-center justify-center">
                   <Image
@@ -142,7 +142,7 @@ export default function Home() {
                 <h3 className="font-medium text-xl mt-2 lg:text-2xl">
                   {exp.heading}
                 </h3>
-                <p className="text-[#746266] lg:text-lg">{exp.text}</p>
+                <p className="text-[#746266] text-sm sm:text-base lg:text-lg">{exp.text}</p>
               </div>
             );
           })}

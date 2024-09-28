@@ -1,4 +1,5 @@
 "use client"
+import { Dispatch, SetStateAction } from "react";
 import { PaystackButton } from "react-paystack";
 import { toast } from "react-toastify";
 /**
@@ -9,6 +10,16 @@ import { toast } from "react-toastify";
  * Paystack
  */
 
+interface Response {
+    message: string;
+    redirecturl: string;
+    reference:string;
+    status:string;
+    trans:string;
+    transaction:string;
+    trxref:string;
+}
+
 export interface PaymentProps {
     address: string;
     name: string;
@@ -17,7 +28,10 @@ export interface PaymentProps {
     classname: string;
     email: string;
     amount: number;
-    cartProducts: object[]
+    disabled: boolean;
+    cartProducts: object[];
+    setPaySuccess: Dispatch<SetStateAction<Response | undefined>>;
+    setPayFailed: Dispatch<SetStateAction<boolean>>;
 }
 
 /**
@@ -33,16 +47,20 @@ export interface PaymentProps {
  * }
  */
 
-export default function InitiatePayment({ address, text, classname, name, phoneNumber, email, amount, cartProducts }: PaymentProps){
+export default function InitiatePayment({ address, text, classname, name, phoneNumber, email, amount, disabled, setPaySuccess, setPayFailed, cartProducts }: PaymentProps){
     // const publicKey: string = process.env.PAYSTACK_TEST_PUBLICKEY
     const publicKey: string = "pk_test_915546746a5c8c4a3fb55799b3285a6ab6088c50"
 
-    function onSuccess (reference: string){
-        toast.success(`Payment successful!. Product will be delivered to ${address}.`);
+    function onSuccess (reference: Response){
+        setPaySuccess(reference);
         console.log(reference);
+        toast.success(`Payment successful!. Product will be delivered to ${address}.`);
     }
-    function onclose (){
+
+    function onClose (){
         alert("Payment will not be recorded. Are you sure you want to close?");
+        setPayFailed(true);
+        console.log("Payment failed");
     }
 
     return (
@@ -51,14 +69,14 @@ export default function InitiatePayment({ address, text, classname, name, phoneN
             className={classname}
             publicKey={publicKey}
             onSuccess={(reference)=>onSuccess(reference)}
-            onClose={onclose}
+            onClose={onClose}
             text={text}
             email={email}
             amount={amount * 100}
             firstname={name}
             phone={phoneNumber}
             currency= "NGN"
-            disabled={cartProducts.length === 0}
+            disabled={disabled}
         />
     )
 }

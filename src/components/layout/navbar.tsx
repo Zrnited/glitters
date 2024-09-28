@@ -47,8 +47,8 @@ export default function Navbar({
               </Link>
             </li>
             <li>
-              <Link className="md:text-lg" href={"/"}>
-                Partners
+              <Link className="md:text-lg" href={"/orders"}>
+                Orders
               </Link>
             </li>
           </ul>

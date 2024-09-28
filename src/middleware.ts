@@ -60,6 +60,11 @@ export function middleware(request: NextRequest){
     return NextResponse.next();
   }
 
+  //checks if a user isn't logged in before trying to access the order page and then redirects to login
+  if (!userToken && pathname === '/order'){
+    return NextResponse.redirect(new URL("/signin", request.url));
+  }
+
   // checks if a user isn't logged in before trying to access the cart page and then redirects to login
   if(!userToken && pathname === '/cart'){
     return NextResponse.redirect(new URL("/signin", request.url));
