@@ -71,8 +71,8 @@ export default function Page() {
   }
 
   function handleSubmit(e: any) {
-    setLoadState(true);
     e.preventDefault();
+    setLoadState(true);
     const validatedFields = userDataSchema.safeParse({
       email: userData.email,
       password: userData.password,
@@ -82,7 +82,6 @@ export default function Page() {
     // console.log(validatedFields.error?.flatten().fieldErrors);
     if (!validatedFields.success) {
       setLoadState(false);
-      return toast.warn("Invalid credentials");
     } else {
       setFieldErr(undefined);
       //check if there is an existing userData
@@ -94,6 +93,7 @@ export default function Page() {
         ) {
           //allow access to other page
           setLoadState(false);
+          if(formError) setFormError(false);
           toast.success("Login successful");
           setCookie({
             name: "glittersUserToken",
@@ -102,22 +102,13 @@ export default function Page() {
             secure: true,
           });
           setIsLogged(true);
-          // setInterval(() => {
-          //   setIsLogged(true);
-          // }, 2000);
-          router.push("/");
         } else {
           setLoadState(false);
           setFormError(true);
         }
       } else {
-        //redirect to sign up
         setLoadState(false);
-        toast.warn("Please sign up first");
-        // setInterval(() => {
-        //   router.push(`/signup`);
-        // }, 2000);
-        router.push("/signup");
+        toast.warn("Data not found. Please sign up first");
       }
     }
   }
@@ -125,6 +116,19 @@ export default function Page() {
   useEffect(() => {
     getUserData();
   }, []);
+
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      if(islogged){
+        router.push("/");
+      } else {
+        return;
+      }
+    }, 3000)
+
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[islogged])
 
   return (
     <Layout>

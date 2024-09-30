@@ -9,7 +9,7 @@ import 'aos/dist/aos.css';
 import Image from "next/image";
 import Layout from "@/components/layout";
 import NextVideo from "next-video";
-import productVideo from "../../videos/product-video.mp4";
+import productVideo from "../../videos/product.mp4";
 import heroimage2 from "@/assets/images/heroImg-2.png";
 import heroimage3 from "@/assets/images/heroImg-3.png";
 import fastDelivery from "@/assets/icons/fastdelivery.png";

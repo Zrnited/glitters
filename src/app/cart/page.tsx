@@ -2,6 +2,7 @@
 import Layout from "@/components/layout";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
+import paymentInt from "@/assets/images/payment-verification.png";
 import check from "@/assets/icons/check.png";
 import { z } from "zod";
 import dynamic from "next/dynamic";
@@ -89,6 +90,7 @@ export default function Page() {
     address: "",
     comment: "",
   });
+
   // console.log(paymentDetails);
   const [paymentErr, setPaymentErr] = useState<FieldErrors>();
   // console.log(paymentErr);
@@ -101,7 +103,7 @@ export default function Page() {
   const [payFailed, setPayFailed] = useState<boolean>(false);
 
   //everything orders
-  const { getOrderArr, setOrders, setOrderToSessionStorage, setCartToSessionStorage, setCart } = useAppContext();
+  const { getOrderArr, setOrders, setOrderToSessionStorage, setCartToSessionStorage, setCart, cart } = useAppContext();
   const router = useRouter();
 
   const itemsPrice: number[] = cartProducts.map(
@@ -231,10 +233,18 @@ export default function Page() {
         console.log(allFields);
         setPay(true);
       } else {
-        toast.warn("KIndly sign up again");
+        toast.warn("Cart is empty. Cannot process payment.");
         console.log("Either price or user is missing!");
       }
     }
+  }
+
+  function clearCart (){
+    const emptyCart: cartObject[] = [];
+    setCart(emptyCart);
+    setCartProducts(emptyCart);
+    setCartToSessionStorage(emptyCart);
+    toast.success("All items cleared");
   }
 
   useEffect(() => {
@@ -293,7 +303,10 @@ export default function Page() {
             </Link>{" "}
             / <span>Cart</span>
           </p>
-          <h1 className="font-medium text-3xl mt-4">Cart Page</h1>
+          <div className="flex flex-row justify-between items-center mt-4 md:w-[60%] lg:w-1/2 xl:w-[59%]">
+            <h1 className="font-medium text-3xl">Cart Page</h1>
+           {cartProducts.length !== 0 && (<button className="bg-red-500 py-1 px-5 rounded text-white hover:bg-red-600 transition ease-in-out delay-100" onClick={clearCart}>Clear all</button>)}
+          </div>
         </div>
 
         {/* Cart section */}
@@ -587,17 +600,20 @@ export default function Page() {
                       setPayFailed={setPayFailed}
                     />
                   )}
-                  {pay && (<span className="flex flex-row gap-x-1 items-center">
-                    <p className="text-[#00A460] text-sm sm:text-base">Details gotten </p>
+                  {pay && (<span className="flex flex-col gap-x-1 items-center sm:flex-row">
+                    <p className="text-[#00A460] text-sm sm:text-base md:hidden lg:flex">Details gotten </p>
                     <Image src={check} alt="icon" priority className="w-[20px] h-[20px]" />
                   </span>)}
                 </div>
               </form>
+
               {/* Paystack div */}
-              <div className="h-[370px] flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
+              <div className="h-fit relative flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
+                <div className="bg-overlay absolute top-0 bottom-0 left-0 right-0"></div>
                 {/* <LoadingState height="50" width="50" /> */}
-                {!payFailed && (<p>Payment confirmation will appear here once processed.</p>)}
+                {!payFailed && (<p className="absolute text-sm text-center text-white w-[70%] sm:text-base sm:w-[90%]">Payment confirmation will appear here once processed.</p>)}
                 {payFailed && (<p className="text-red-600 text-lg">Transaction Failed! Try again.</p>)}
+                <Image src={paymentInt} alt="payment-icon" className="w-fit h-fit" />
               </div>
               <p className="font-semibold text-center mt-3">
                 Payment Powered by Paystack

@@ -2,7 +2,7 @@
 import { z } from "zod";
 import Layout from "@/components/layout";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 // import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -44,9 +44,6 @@ export default function Page() {
   const [fieldErr, setFieldErr] = useState<FieldErrors>();
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  // if(isLogged){
-  //   router.push(`/signin`);
-  // }
 
   function handleChange(e: any) {
     if (e.target) {
@@ -75,12 +72,27 @@ export default function Page() {
     if (hasErrors) setFieldErr(hasErrors);
     if (!validatedFields.success) {
       // toast.warn("Invalid credentials");
+      return;
     } else {
       setToStorage();
       setUserCreated(true);
-      router.push("/signin");
+      // router.push("/signin");
+      setIsLogged(true);
     }
   }
+
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      if(isLogged){
+        router.push("/signin");
+      } else {
+        return;
+      }
+    }, 3000)
+
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[isLogged])
 
   return (
     <Layout>
