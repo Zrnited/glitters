@@ -609,9 +609,8 @@ export default function Page() {
 
               {/* Paystack div */}
               <div className="h-fit relative flex flex-col gap-y-2 items-center justify-center italic border border-[#2E2729] mt-5">
-                <div className="bg-overlay absolute top-0 bottom-0 left-0 right-0"></div>
                 {/* <LoadingState height="50" width="50" /> */}
-                {!payFailed && (<p className="absolute text-sm text-center text-white w-[70%] sm:text-base sm:w-[90%]">Payment confirmation will appear here once processed.</p>)}
+                {/* {!payFailed && (<p className="absolute text-sm text-center text-white w-[70%] sm:text-base sm:w-[90%]">Payment confirmation will appear here once processed.</p>)} */}
                 {payFailed && (<p className="text-red-600 text-lg">Transaction Failed! Try again.</p>)}
                 <Image src={paymentInt} alt="payment-icon" className="w-fit h-fit" />
               </div>
