@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-// import InitiatePayment from "@/payment/InitiatePayment";
 
 export interface cartObject {
   id: number;
@@ -393,62 +392,6 @@ export default function Page() {
                   </div>
                 );
               })}
-
-              {/* Revert back if any issue */}
-              {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">
-              <Image
-                alt="cart-img"
-                priority
-                src={cartImg}
-                className="w-[112px] h-[112px] lg:w-[80px] lg:h-[80px]"
-              />
-              <div className="lg:flex lg:flex-row lg:gap-x-5 lg:items-center">
-                <div>
-                  <h1 className="font-medium text-xl lg:text-2xl">
-                    Purple fur bag
-                  </h1>
-                  <p className="text-sm lg:text-lg">
-                    Our bestselling fur bag so far
-                  </p>
-                </div>
-                <div className="lg:hidden">
-                  <div className="flex flex-row gap-5 text-sm font-semibold">
-                    <p>N50,000</p>
-                    <p>Purple</p>
-                  </div>
-                  <div className="flex flex-row gap-x-1">
-                    <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]">
-                      <BsChevronUp color="white" size={20} />
-                    </button>
-
-                    <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
-                      4
-                    </span>
-
-                    <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]">
-                      <BsChevronDown color="white" size={20} />
-                    </button>
-                  </div>
-                </div>
-                <div className="hidden lg:flex lg:items-center lg:gap-x-3 lg:flex-col xl:ml-5 xl:flex-row">
-                  <p className="text-lg">Purple</p>
-                  <div className="flex flex-row gap-x-2">
-                    <span className="w-[48px] h-[38px] border border-[#2E2729] font-semibold text-lg flex justify-center items-center">
-                      4
-                    </span>
-
-                    <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]">
-                      <BsChevronUp color="white" size={20} />
-                    </button>
-
-                    <button className="bg-black text-white h-[38px] flex justify-center items-center w-[38px]">
-                      <BsChevronDown color="white" size={20} />
-                    </button>
-                  </div>
-                  <p className="text-lg">N50,000</p>
-                </div>
-              </div>
-            </div> */}
 
               {/* cart item with color selection */}
               {/* <div className="flex flex-row items-center gap-2 border border-[#2E2729] p-2 lg:h-auto">

@@ -4,19 +4,18 @@ import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context";
-import Aos from 'aos';
-import 'aos/dist/aos.css';
+import { CldVideoPlayer } from "next-cloudinary";
+import "next-cloudinary/dist/cld-video-player.css";
+import Aos from "aos";
+import "aos/dist/aos.css";
 import Image from "next/image";
 import Layout from "@/components/layout";
-import NextVideo from "next-video";
-import productVideo from "../../videos/product.mp4";
 import heroimage2 from "@/assets/images/heroImg-2.png";
 import heroimage3 from "@/assets/images/heroImg-3.png";
 import fastDelivery from "@/assets/icons/fastdelivery.png";
 import customerCare from "@/assets/icons/customercare.png";
 import professionalism from "@/assets/icons/professional.png";
 import topLadies from "@/assets/icons/people.png";
-
 
 export default function Home() {
   const experience = [
@@ -46,26 +45,26 @@ export default function Home() {
   const router = useRouter();
   const [getProductId, setGetProductId] = useState<number>();
 
-  function setProductId (e: number){
+  function setProductId(e: number) {
     console.log(e);
     setGetProductId(e);
   }
 
-  useEffect(()=>{
-    if(getProductId === undefined){
+  useEffect(() => {
+    if (getProductId === undefined) {
       return;
     } else {
       router.push(`/product/${getProductId.toString()}`);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getProductId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getProductId]);
 
-  useEffect(()=>{
+  useEffect(() => {
     Aos.init({
       duration: 1000,
-      once: false
-    })
-  })
+      once: false,
+    });
+  });
 
   return (
     <Layout>
@@ -81,12 +80,8 @@ export default function Home() {
           {/* carousel div */}
           <div className="flex flex-row gap-x-3 overflow-scroll activity sm:overflow-hidden md:justify-center md:w-full md:gap-x-6 lg:w-3/4">
             {/* video div */}
-            <div className="w-[168px] h-[300px] rounded-xl z-0 md:h-[380px] md:w-[213px] lg:w-[180px] lg:h-[320px] xl:w-[253px] xl:h-[450px]">
-              <NextVideo
-                className="object-fill bg-cover h-full w-full"
-                accentColor="#CF8292"
-                src={productVideo}
-              />
+            <div className="min-w-[168px] min-h-[300px] rounded-xl z-0 md:h-[380px] md:w-[213px] lg:w-[180px] lg:h-[320px] xl:w-[253px] xl:h-[450px]">
+              <CldVideoPlayer src="kzgjthbp4fc9iafxt2en" className="w-full h-full rounded-xl" />
             </div>
             <Image
               src={heroimage2}
@@ -104,7 +99,10 @@ export default function Home() {
 
           {/* info div */}
           <div className="flex flex-col gap-4 lg:w-[460px]">
-            <h1 data-aos="fade-up" className="text-6xl font-semibold xl:text-[80px]">
+            <h1
+              data-aos="fade-up"
+              className="text-6xl font-semibold xl:text-[80px]"
+            >
               Making every of your{" "}
               <span className="text-[#CF8292]">show up </span>glow.
             </h1>
@@ -112,19 +110,29 @@ export default function Home() {
               We serve and offer delivery nationwide. You order world class and
               we deliver world class.
             </p>
-            <button onClick={(()=>{
-              window.scrollTo(0, 1400);
-            })} data-aos="fade-up" className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg">
+            <button
+              onClick={() => {
+                window.scrollTo(0, 1400);
+              }}
+              data-aos="fade-up"
+              className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg"
+            >
               Show Now
             </button>
           </div>
         </article>
       </section>
       <section className="py-5 px-5">
-        <h1 data-aos="fade-up" className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl">
+        <h1
+          data-aos="fade-up"
+          className="text-center text-3xl font-semibold md:text-4xl lg:text-5xl"
+        >
           What you experience shopping with us
         </h1>
-        <div data-aos="fade-up" className="py-10 grid grid-cols-2 gap-y-10 place-items-start sm:place-items-center md:grid-cols-4 md:place-items-start lg:gap-y-0 lg:gap-x-8 lg:py-20">
+        <div
+          data-aos="fade-up"
+          className="py-10 grid grid-cols-2 gap-y-10 place-items-start sm:place-items-center md:grid-cols-4 md:place-items-start lg:gap-y-0 lg:gap-x-8 lg:py-20"
+        >
           {experience?.map((exp, index) => {
             return (
               <div
@@ -142,13 +150,21 @@ export default function Home() {
                 <h3 className="font-medium text-xl mt-2 lg:text-2xl">
                   {exp.heading}
                 </h3>
-                <p className="text-[#746266] text-sm sm:text-base lg:text-lg">{exp.text}</p>
+                <p className="text-[#746266] text-sm sm:text-base lg:text-lg">
+                  {exp.text}
+                </p>
               </div>
             );
           })}
         </div>
       </section>
-      <Products setCartToSessionStorage={setCartToSessionStorage} cartArray={cart} setCartArray={setCart} productsData={products} setProductId={setProductId}/>
+      <Products
+        setCartToSessionStorage={setCartToSessionStorage}
+        cartArray={cart}
+        setCartArray={setCart}
+        productsData={products}
+        setProductId={setProductId}
+      />
     </Layout>
   );
 }
