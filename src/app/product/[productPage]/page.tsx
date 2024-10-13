@@ -7,7 +7,6 @@ import Layout from "@/components/layout";
 import Loading from "@/components/loading/loading";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
-import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import fullProdImg from "@/assets/images/product3-2.png";
 import vector1 from "@/assets/icons/vector-1.png";
@@ -215,7 +214,7 @@ export default function Page() {
                 className="w-full h-auto rounded-lg sm:w-[400px] lg:w-full"
                 alt="product-img"
                 priority
-                src={fullProdImg}
+                src={prod.fullImg}
               />
             </div>
             <div className="flex flex-col gap-y-4 lg:gap-y-5 lg:min-w-[500px] xl:min-w-[630px] xl:gap-y-12">
@@ -299,7 +298,7 @@ export default function Page() {
         </section>
       )}
       {!prod && <Loading />}
-      <Products setCartToSessionStorage={setCartToSessionStorage} cartArray={cart} setCartArray={setCart} productsData={products} setProductId={setProductId} />
+      <Products setCartToSessionStorage={setCartToSessionStorage} cartArray={cart} setCartArray={setCart} setProductId={setProductId} />
     </Layout>
   );
 }

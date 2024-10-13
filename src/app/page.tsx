@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { products } from "@/utils/Products";
 import { Products } from "@/components/products/products";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context";
@@ -49,6 +48,7 @@ export default function Home() {
     console.log(e);
     setGetProductId(e);
   }
+
 
   useEffect(() => {
     if (getProductId === undefined) {
@@ -110,15 +110,13 @@ export default function Home() {
               We serve and offer delivery nationwide. You order world class and
               we deliver world class.
             </p>
-            <button
-              onClick={() => {
-                window.scrollTo(0, 1400);
-              }}
+            <a
+              href="#products"
               data-aos="fade-up"
-              className="bg-[#2E2729] text-white text-center h-[55px] w-[172px] hover:bg-black transition delay-100 xl:text-lg"
+              className="bg-[#2E2729] text-white cursor-pointer text-center h-[55px] w-[172px] flex items-center justify-center hover:bg-black transition-all ease-in-out delay-100 xl:text-lg"
             >
               Show Now
-            </button>
+            </a>
           </div>
         </article>
       </section>
@@ -137,7 +135,7 @@ export default function Home() {
             return (
               <div
                 key={index}
-                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center cursor-pointer z-10 p-2 md:p-3 lg:max-w-[280px] lg:gap-y-4 hover:shadow-md hover:scale-105 hover:bg-[#F1DADF] transition ease-in-out delay-150"
+                className="min-w-[150px] max-w-[208px] flex flex-col items-center text-center z-10 p-2 md:p-3 lg:max-w-[280px] lg:gap-y-4"
               >
                 <div className="h-[100px] w-[100px] bg-[#F1DADF] rounded-md flex items-center justify-center">
                   <Image
@@ -162,9 +160,7 @@ export default function Home() {
         setCartToSessionStorage={setCartToSessionStorage}
         cartArray={cart}
         setCartArray={setCart}
-        productsData={products}
-        setProductId={setProductId}
-      />
+        setProductId={setProductId} />
     </Layout>
   );
 }
